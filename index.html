@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1.0"
-/>
+>
 
 <title>TapVia NFC</title>
 
@@ -19,9 +19,9 @@
 }
 
 
-/* =========================
+/* =====================================================
    RESET
-   ========================= */
+   ===================================================== */
 
 *{
   box-sizing:border-box;
@@ -54,9 +54,9 @@ body{
 }
 
 
-/* =========================
-   STORY
-   ========================= */
+/* =====================================================
+   ANA ALAN
+   ===================================================== */
 
 .scroll-section{
 
@@ -87,44 +87,46 @@ body{
 }
 
 
-/* =========================
+/* =====================================================
    CANVAS
-   ========================= */
+   ===================================================== */
 
 #sequence-canvas{
 
   position:absolute;
 
   top:50%;
-  left:50%;
+
+  left:auto;
+
+  right:3mm;
 
   transform:
-    translate(-50%,-50%);
+    translateY(-50%);
 
-  height:92vh;
+  height:96vh;
 
   width:auto;
 
-  max-width:94vw;
+  max-width:none;
 
   aspect-ratio:478 / 850;
 
   display:block;
 
   background:#ffffff;
-
 }
 
 
-/* =========================
-   PROGRESS
-   ========================= */
+/* =====================================================
+   PROGRESS BAR
+   ===================================================== */
 
 .scroll-progress-track{
 
   position:absolute;
 
-  bottom:32px;
+  bottom:40px;
 
   left:50%;
 
@@ -137,17 +139,17 @@ body{
       320px
     );
 
-  height:2px;
+  height:3px;
 
   background:
     rgba(
       0,
       0,
       0,
-      .14
+      .16
     );
 
-  border-radius:2px;
+  border-radius:3px;
 
   overflow:hidden;
 
@@ -162,36 +164,39 @@ body{
   height:100%;
 
   background:#e6005c;
-
 }
 
 
-/* =========================
+/* =====================================================
    KAYDIR
-   ========================= */
+   ===================================================== */
 
 .scroll-hint{
 
   position:absolute;
 
-  bottom:48px;
+  bottom:60px;
 
   left:50%;
 
   transform:
     translateX(-50%);
 
-  font-size:11px;
+  font-size:13px;
 
-  letter-spacing:.15em;
+  font-weight:600;
+
+  letter-spacing:.12em;
 
   text-transform:uppercase;
 
-  color:#555;
+  color:#222222;
 
-  opacity:.7;
+  opacity:1;
 
   z-index:10;
+
+  white-space:nowrap;
 
   animation:
     bob 1.8s ease-in-out infinite;
@@ -211,16 +216,16 @@ body{
   50%{
 
     transform:
-      translate(-50%,6px);
+      translate(-50%,5px);
 
   }
 
 }
 
 
-/* =========================
+/* =====================================================
    PRELOADER
-   ========================= */
+   ===================================================== */
 
 #preload-overlay{
 
@@ -288,13 +293,12 @@ body{
   height:100%;
 
   background:#e6005c;
-
 }
 
 
-/* =========================
-   MOBILE
-   ========================= */
+/* =====================================================
+   MOBİL
+   ===================================================== */
 
 @media(max-width:700px){
 
@@ -307,9 +311,9 @@ body{
 
   #sequence-canvas{
 
-    height:88vh;
+    right:3mm;
 
-    max-width:96vw;
+    height:90vh;
 
   }
 
@@ -318,14 +322,18 @@ body{
 
     width:65%;
 
-    bottom:30px;
+    bottom:34px;
+
+    height:3px;
 
   }
 
 
   .scroll-hint{
 
-    bottom:46px;
+    bottom:54px;
+
+    font-size:12px;
 
   }
 
@@ -357,7 +365,7 @@ body{
 
 
 <!-- =====================================================
-     MAIN STORY
+     MAIN
      ===================================================== -->
 
 <section
@@ -367,7 +375,7 @@ body{
   <div class="sticky-wrap">
 
 
-    <!-- FRAME CANVAS -->
+    <!-- FRAME -->
 
     <canvas
       id="sequence-canvas">
@@ -412,19 +420,6 @@ body{
 
   const CONFIG = {
 
-    /*
-      GitHub'daki index.html ile frame'ler
-      AYNI klasörde.
-
-      Dosyalar:
-
-      ezgif-frame-001.jpg
-      ezgif-frame-002.jpg
-      ezgif-frame-003.jpg
-      ...
-      ezgif-frame-110.jpg
-    */
-
     frameFolder: ".",
 
 
@@ -444,23 +439,9 @@ body{
       3,
 
 
-    /*
-      Beyaz arka plan
-    */
-
     background:
       "#ffffff",
 
-
-    /*
-      Animasyon yumuşaklığı
-
-      Daha küçük:
-      daha yumuşak
-
-      Daha büyük:
-      daha hızlı
-    */
 
     ease:
       0.08
@@ -502,35 +483,6 @@ body{
     );
 
 
-  if(
-    !canvas ||
-    !ctx
-  ){
-
-    return;
-
-  }
-
-
-  /*
-    Canvas arka planı
-  */
-
-  canvas.style.background =
-    CONFIG.background;
-
-
-  /*
-    CSS değişkeni
-  */
-
-  document.documentElement.style
-    .setProperty(
-      "--bg",
-      CONFIG.background
-    );
-
-
   /* =====================================================
      FRAME URL
      ===================================================== */
@@ -538,19 +490,6 @@ body{
   function frameUrl(
     index
   ){
-
-    /*
-      index 0:
-      ezgif-frame-001.jpg
-
-      index 1:
-      ezgif-frame-002.jpg
-
-      ...
-
-      index 109:
-      ezgif-frame-110.jpg
-    */
 
     const number =
       String(
@@ -574,7 +513,7 @@ body{
 
 
   /* =====================================================
-     IMAGE ARRAY
+     IMAGES
      ===================================================== */
 
   const images =
@@ -588,7 +527,7 @@ body{
 
 
   /* =====================================================
-     PRELOAD FRAMES
+     PRELOAD
      ===================================================== */
 
   function preloadFrames(){
@@ -596,28 +535,9 @@ body{
     return new Promise(
       (resolve)=>{
 
-        /*
-          Hiç frame yoksa
-        */
-
-        if(
-          CONFIG.frameCount <= 0
-        ){
-
-          resolve();
-
-          return;
-
-        }
-
-
-        /*
-          Tüm frame'leri yükle
-        */
-
         for(
-          let i = 0;
-          i < CONFIG.frameCount;
+          let i=0;
+          i<CONFIG.frameCount;
           i++
         ){
 
@@ -629,12 +549,8 @@ body{
             frameUrl(i);
 
 
-          /*
-            Başarılı yükleme
-          */
-
           img.onload =
-            () => {
+            ()=>{
 
               loadedCount++;
 
@@ -670,14 +586,8 @@ body{
             };
 
 
-          /*
-            Eksik frame varsa
-            preload sonsuza kadar
-            beklemesin.
-          */
-
           img.onerror =
-            () => {
+            ()=>{
 
               console.warn(
                 "Frame yüklenemedi:",
@@ -731,7 +641,7 @@ body{
 
 
   /* =====================================================
-     CANVAS STATE
+     CANVAS
      ===================================================== */
 
   let dpr =
@@ -752,10 +662,6 @@ body{
   let frameProgress =
     0;
 
-
-  /* =====================================================
-     RESIZE
-     ===================================================== */
 
   function resizeCanvas(){
 
@@ -811,31 +717,21 @@ body{
     frameIndex
   ){
 
-    /*
-      Frame sınırları
-    */
-
-    const maxIndex =
-      images.length - 1;
-
-
-    const index =
+    const clamped =
       Math.min(
         Math.max(
           frameIndex,
           0
         ),
-        maxIndex
+        images.length - 1
       );
 
 
     const img =
-      images[index];
+      images[
+        clamped
+      ];
 
-
-    /*
-      Görsel hazır değilse
-    */
 
     if(
       !img ||
@@ -852,18 +748,16 @@ body{
       canvas.getBoundingClientRect();
 
 
-    const canvasWidth =
+    const cw =
       rect.width;
 
 
-    const canvasHeight =
+    const ch =
       rect.height;
 
 
     /*
-      ===============================
-      BEYAZ ZEMİN
-      ===============================
+      BEYAZ ARKA PLAN
     */
 
     ctx.fillStyle =
@@ -873,13 +767,13 @@ body{
     ctx.fillRect(
       0,
       0,
-      canvasWidth,
-      canvasHeight
+      cw,
+      ch
     );
 
 
     /*
-      Görüntü kalitesi
+      YÜKSEK KALİTE
     */
 
     ctx.imageSmoothingEnabled =
@@ -891,9 +785,7 @@ body{
 
 
     /*
-      ===============================
-      COVER FIT
-      ===============================
+      COVER
     */
 
     const imageRatio =
@@ -902,14 +794,14 @@ body{
 
 
     const canvasRatio =
-      canvasWidth /
-      canvasHeight;
+      cw /
+      ch;
 
 
     let drawWidth;
     let drawHeight;
-    let drawX;
-    let drawY;
+    let x;
+    let y;
 
 
     if(
@@ -917,26 +809,22 @@ body{
       imageRatio
     ){
 
-      /*
-        Canvas daha geniş
-      */
-
       drawWidth =
-        canvasWidth;
+        cw;
 
 
       drawHeight =
-        canvasWidth /
+        cw /
         imageRatio;
 
 
-      drawX =
+      x =
         0;
 
 
-      drawY =
+      y =
         (
-          canvasHeight -
+          ch -
           drawHeight
         ) / 2;
 
@@ -944,40 +832,32 @@ body{
 
     else{
 
-      /*
-        Canvas daha uzun
-      */
-
       drawHeight =
-        canvasHeight;
+        ch;
 
 
       drawWidth =
-        canvasHeight *
+        ch *
         imageRatio;
 
 
-      drawX =
+      x =
         (
-          canvasWidth -
+          cw -
           drawWidth
         ) / 2;
 
 
-      drawY =
+      y =
         0;
 
     }
 
 
-    /*
-      FRAME ÇİZ
-    */
-
     ctx.drawImage(
       img,
-      drawX,
-      drawY,
+      x,
+      y,
       drawWidth,
       drawHeight
     );
@@ -997,10 +877,6 @@ body{
     value
   ){
 
-    /*
-      0–1 arasında tut
-    */
-
     frameProgress =
       Math.min(
         Math.max(
@@ -1011,20 +887,12 @@ body{
       );
 
 
-    /*
-      0 → 109 frame
-    */
-
     targetFrame =
       frameProgress *
       (
         CONFIG.frameCount - 1
       );
 
-
-    /*
-      Progress çizgisi
-    */
 
     if(
       progressFill
@@ -1049,13 +917,6 @@ body{
     event
   ){
 
-    /*
-      Animasyon alanında
-      sayfa scroll olmaz.
-
-      Frame değişir.
-    */
-
     event.preventDefault();
 
 
@@ -1069,23 +930,23 @@ body{
 
 
   /* =====================================================
-     ANIMATION LOOP
+     ANIMATION
      ===================================================== */
 
   function animate(){
 
-    const difference =
+    const diff =
       targetFrame -
       currentFrame;
 
 
     if(
-      Math.abs(difference) >
+      Math.abs(diff) >
       0.01
     ){
 
       currentFrame +=
-        difference *
+        diff *
         CONFIG.ease;
 
     }
@@ -1118,10 +979,6 @@ body{
 
   async function init(){
 
-    /*
-      Resize
-    */
-
     window.addEventListener(
       "resize",
       resizeCanvas,
@@ -1130,10 +987,6 @@ body{
       }
     );
 
-
-    /*
-      Wheel
-    */
 
     canvas.addEventListener(
       "wheel",
@@ -1144,41 +997,21 @@ body{
     );
 
 
-    /*
-      Canvas ölçüsü
-    */
-
     resizeCanvas();
 
 
-    /*
-      Frame'leri yükle
-    */
-
     await preloadFrames();
 
-
-    /*
-      İlk frame
-    */
 
     drawFrame(
       0
     );
 
 
-    /*
-      Başlangıç
-    */
-
     applyProgress(
       0
     );
 
-
-    /*
-      Animasyon başlat
-    */
 
     animate();
 
@@ -1197,8 +1030,8 @@ body{
 
 
       setTimeout(
-        () => {
-
+        ()=>{
+          
           if(
             preloadOverlay
           ){
@@ -1215,10 +1048,6 @@ body{
 
   }
 
-
-  /*
-    BAŞLAT
-  */
 
   init();
 
