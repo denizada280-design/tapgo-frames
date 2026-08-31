@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
 
 <meta
@@ -10,12 +11,21 @@
 
 <title>TapVia NFC</title>
 
+
 <style>
 
+/* =====================================================
+   ROOT
+   ===================================================== */
+
 :root{
+
   --bg:#ffffff;
+
   --fg:#222222;
+
   --accent:#e6005c;
+
 }
 
 
@@ -24,9 +34,13 @@
    ===================================================== */
 
 *{
+
   box-sizing:border-box;
+
   margin:0;
+
   padding:0;
+
 }
 
 
@@ -34,9 +48,11 @@ html,
 body{
 
   width:100%;
+
   height:100%;
 
   margin:0;
+
   padding:0;
 
   background:#ffffff;
@@ -50,7 +66,8 @@ body{
     Arial,
     sans-serif;
 
-  overflow-x:hidden;
+  overflow:hidden;
+
 }
 
 
@@ -71,6 +88,7 @@ body{
   background:#ffffff;
 
   overflow:hidden;
+
 }
 
 
@@ -79,16 +97,18 @@ body{
   position:relative;
 
   width:100%;
+
   height:100%;
 
   background:#ffffff;
 
   overflow:hidden;
+
 }
 
 
 /* =====================================================
-   CANVAS
+   CANVAS / ÜRÜN GÖRSELİ
    ===================================================== */
 
 #sequence-canvas{
@@ -99,12 +119,12 @@ body{
 
   left:auto;
 
-  right:3mm;
+  right:1.5mm;
 
   transform:
     translateY(-50%);
 
-  height:96vh;
+  height:104vh;
 
   width:auto;
 
@@ -115,74 +135,194 @@ body{
   display:block;
 
   background:#ffffff;
+
 }
 
 
 /* =====================================================
-   PROGRESS BAR
+   VERTICAL PROGRESS AREA
    ===================================================== */
 
-.scroll-progress-track{
+.tapvia-progress{
 
   position:absolute;
 
-  bottom:40px;
+  top:50%;
 
-  left:50%;
+  right:calc(
+    1.5mm + 96vh * 0.5647
+  );
 
   transform:
-    translateX(-50%);
+    translateY(-50%);
 
-  width:
-    min(
-      60%,
-      320px
-    );
+  width:46px;
 
-  height:3px;
+  height:62vh;
 
-  background:
-    rgba(
-      0,
-      0,
-      0,
-      .16
-    );
+  z-index:20;
 
-  border-radius:3px;
+  display:flex;
 
-  overflow:hidden;
+  align-items:center;
 
-  z-index:10;
+  justify-content:center;
+
 }
 
 
-.scroll-progress-fill{
+/* =====================================================
+   OKUN DIŞ GÖVDESİ
+   ===================================================== */
 
-  width:0%;
+.tapvia-arrow{
+
+  position:relative;
+
+  width:8px;
 
   height:100%;
 
-  background:#e6005c;
+  border-radius:8px;
+
+  background:
+    rgba(
+      230,
+      0,
+      92,
+      .14
+    );
+
 }
 
 
 /* =====================================================
-   KAYDIR
+   OKUN İÇ DOLGUSU
+
+   Aşağıdan yukarı doğru dolar.
    ===================================================== */
 
-.scroll-hint{
+.tapvia-arrow-fill{
 
   position:absolute;
 
-  bottom:60px;
+  left:0;
+
+  bottom:0;
+
+  width:100%;
+
+  height:0%;
+
+  border-radius:8px;
+
+  background:
+    var(--accent);
+
+  transition:
+    height .08s linear;
+
+}
+
+
+/* =====================================================
+   OK BAŞI / ÜÇGEN
+
+   Üst tarafa bakıyor.
+   ===================================================== */
+
+.tapvia-arrow-head{
+
+  position:absolute;
+
+  top:-2px;
+
+  left:50%;
+
+  width:0;
+
+  height:0;
+
+  transform:
+    translateX(-50%);
+
+  border-left:
+    14px solid transparent;
+
+  border-right:
+    14px solid transparent;
+
+  border-bottom:
+    20px solid
+    rgba(
+      230,
+      0,
+      92,
+      .18
+    );
+
+}
+
+
+/* =====================================================
+   DOLU OK BAŞI
+
+   İlerledikçe görünür.
+   ===================================================== */
+
+.tapvia-arrow-head-fill{
+
+  position:absolute;
+
+  top:-2px;
+
+  left:50%;
+
+  width:0;
+
+  height:0;
+
+  transform:
+    translateX(-50%);
+
+  border-left:
+    14px solid transparent;
+
+  border-right:
+    14px solid transparent;
+
+  border-bottom:
+    20px solid
+    var(--accent);
+
+  opacity:0;
+
+  transition:
+    opacity .12s linear;
+
+}
+
+
+/* =====================================================
+   KAYDIR YAZISI
+   ===================================================== */
+
+.tapvia-scroll-label{
+
+  position:absolute;
+
+  top:calc(100% + 16px);
 
   left:50%;
 
   transform:
     translateX(-50%);
 
-  font-size:13px;
+  white-space:nowrap;
+
+  color:#333333;
+
+  font-size:12px;
 
   font-weight:600;
 
@@ -190,33 +330,96 @@ body{
 
   text-transform:uppercase;
 
-  color:#222222;
-
-  opacity:1;
-
-  z-index:10;
-
-  white-space:nowrap;
-
-  animation:
-    bob 1.8s ease-in-out infinite;
 }
 
 
-@keyframes bob{
+/* =====================================================
+   YÜZDE
+   ===================================================== */
 
-  0%,
-  100%{
+.tapvia-percent{
 
-    transform:
-      translate(-50%,0);
+  position:absolute;
+
+  bottom:
+    calc(
+      100% + 15px
+    );
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  color:#777777;
+
+  font-size:10px;
+
+  font-weight:600;
+
+  letter-spacing:.08em;
+
+  white-space:nowrap;
+
+}
+
+
+/* =====================================================
+   MOBİL
+   ===================================================== */
+
+@media(max-width:700px){
+
+  #sequence-canvas{
+
+    right:1.5mm;
+
+    height:94vh;
 
   }
 
-  50%{
 
-    transform:
-      translate(-50%,5px);
+  .tapvia-progress{
+
+    /*
+      Mobilde ok görselin biraz
+      daha solunda.
+    */
+
+    right:
+      calc(
+        1.5mm + 84vh * 0.5647
+      );
+
+    height:56vh;
+
+    width:42px;
+
+  }
+
+
+  .tapvia-arrow{
+
+    width:7px;
+
+  }
+
+
+  .tapvia-arrow-head,
+  .tapvia-arrow-head-fill{
+
+    border-left-width:12px;
+
+    border-right-width:12px;
+
+    border-bottom-width:18px;
+
+  }
+
+
+  .tapvia-scroll-label{
+
+    font-size:11px;
 
   }
 
@@ -233,10 +436,11 @@ body{
 
   inset:0;
 
-  z-index:9999;
-
   width:100%;
+
   height:100%;
+
+  z-index:9999;
 
   background:#ffffff;
 
@@ -253,6 +457,7 @@ body{
   transition:
     opacity .5s ease,
     visibility .5s ease;
+
 }
 
 
@@ -263,12 +468,13 @@ body{
   visibility:hidden;
 
   pointer-events:none;
+
 }
 
 
 .preload-bar-track{
 
-  width:200px;
+  width:180px;
 
   height:2px;
 
@@ -280,9 +486,10 @@ body{
       .12
     );
 
+  overflow:hidden;
+
   border-radius:2px;
 
-  overflow:hidden;
 }
 
 
@@ -292,54 +499,13 @@ body{
 
   height:100%;
 
-  background:#e6005c;
-}
-
-
-/* =====================================================
-   MOBİL
-   ===================================================== */
-
-@media(max-width:700px){
-
-  .scroll-section{
-
-    min-height:600px;
-
-  }
-
-
-  #sequence-canvas{
-
-    right:3mm;
-
-    height:90vh;
-
-  }
-
-
-  .scroll-progress-track{
-
-    width:65%;
-
-    bottom:34px;
-
-    height:3px;
-
-  }
-
-
-  .scroll-hint{
-
-    bottom:54px;
-
-    font-size:12px;
-
-  }
+  background:
+    var(--accent);
 
 }
 
 </style>
+
 </head>
 
 
@@ -347,7 +513,7 @@ body{
 
 
 <!-- =====================================================
-     PRELOADER
+     PRELOAD
      ===================================================== -->
 
 <div id="preload-overlay">
@@ -372,33 +538,81 @@ body{
   id="story"
   class="scroll-section">
 
+
   <div class="sticky-wrap">
 
 
-    <!-- FRAME -->
+    <!-- =================================================
+         ÜRÜN
+         ================================================= -->
 
     <canvas
       id="sequence-canvas">
     </canvas>
 
 
-    <!-- PROGRESS -->
+    <!-- =================================================
+         VERTICAL PROGRESS
+         ================================================= -->
 
     <div
-      class="scroll-progress-track">
+      class="tapvia-progress"
+      id="tapvia-progress">
+
+
+      <!-- YÜZDE -->
 
       <div
-        class="scroll-progress-fill"
-        id="progress-fill">
+        class="tapvia-percent"
+        id="tapvia-percent">
+
+        0%
+
       </div>
 
-    </div>
+
+      <!-- OK -->
+
+      <div
+        class="tapvia-arrow">
 
 
-    <!-- KAYDIR -->
+        <!-- DIŞ GÖVDE DOLGUSU -->
 
-    <div class="scroll-hint">
-      KAYDIR
+        <div
+          class="tapvia-arrow-fill"
+          id="tapvia-arrow-fill">
+        </div>
+
+
+        <!-- SABİT OK BAŞI -->
+
+        <div
+          class="tapvia-arrow-head">
+        </div>
+
+
+        <!-- DOLAN OK BAŞI -->
+
+        <div
+          class="tapvia-arrow-head-fill"
+          id="tapvia-arrow-head-fill">
+        </div>
+
+
+      </div>
+
+
+      <!-- KAYDIR -->
+
+      <div
+        class="tapvia-scroll-label">
+
+        KAYDIR
+
+      </div>
+
+
     </div>
 
 
@@ -420,28 +634,48 @@ body{
 
   const CONFIG = {
 
-    frameFolder: ".",
+    /*
+      Frame'ler index.html ile
+      AYNI klasörde.
+    */
 
+    frameFolder:
+      ".",
+
+
+    /*
+      Dosya formatı:
+
+      ezgif-frame-001.jpg
+      ezgif-frame-002.jpg
+      ...
+      ezgif-frame-110.jpg
+    */
 
     framePrefix:
       "ezgif-frame-",
 
-
     frameExt:
       "jpg",
 
-
     frameCount:
       110,
-
 
     padLength:
       3,
 
 
+    /*
+      Beyaz arka plan
+    */
+
     background:
       "#ffffff",
 
+
+    /*
+      Frame yumuşaklığı
+    */
 
     ease:
       0.08
@@ -467,20 +701,48 @@ body{
 
   const progressFill =
     document.getElementById(
-      "progress-fill"
+      "tapvia-arrow-fill"
     );
 
 
-  const preloadOverlay =
+  const progressArea =
+    document.getElementById(
+      "tapvia-progress"
+    );
+
+
+  const percentLabel =
+    document.getElementById(
+      "tapvia-percent"
+    );
+
+
+  const arrowHeadFill =
+    document.getElementById(
+      "tapvia-arrow-head-fill"
+    );
+
+
+  const preload =
     document.getElementById(
       "preload-overlay"
     );
 
 
-  const preloadBarFill =
+  const preloadFill =
     document.getElementById(
       "preload-bar-fill"
     );
+
+
+  if(
+    !canvas ||
+    !ctx
+  ){
+
+    return;
+
+  }
 
 
   /* =====================================================
@@ -501,12 +763,19 @@ body{
 
 
     return (
+
       CONFIG.frameFolder +
+
       "/" +
+
       CONFIG.framePrefix +
+
       number +
+
       "." +
+
       CONFIG.frameExt
+
     );
 
   }
@@ -536,8 +805,8 @@ body{
       (resolve)=>{
 
         for(
-          let i=0;
-          i<CONFIG.frameCount;
+          let i = 0;
+          i < CONFIG.frameCount;
           i++
         ){
 
@@ -565,10 +834,10 @@ body{
 
 
               if(
-                preloadBarFill
+                preloadFill
               ){
 
-                preloadBarFill.style.width =
+                preloadFill.style.width =
                   percent + "%";
 
               }
@@ -608,10 +877,10 @@ body{
 
 
               if(
-                preloadBarFill
+                preloadFill
               ){
 
-                preloadBarFill.style.width =
+                preloadFill.style.width =
                   percent + "%";
 
               }
@@ -662,6 +931,10 @@ body{
   let frameProgress =
     0;
 
+
+  /* =====================================================
+     RESIZE
+     ===================================================== */
 
   function resizeCanvas(){
 
@@ -717,7 +990,7 @@ body{
     frameIndex
   ){
 
-    const clamped =
+    const index =
       Math.min(
         Math.max(
           frameIndex,
@@ -728,9 +1001,7 @@ body{
 
 
     const img =
-      images[
-        clamped
-      ];
+      images[index];
 
 
     if(
@@ -748,16 +1019,16 @@ body{
       canvas.getBoundingClientRect();
 
 
-    const cw =
+    const width =
       rect.width;
 
 
-    const ch =
+    const height =
       rect.height;
 
 
     /*
-      BEYAZ ARKA PLAN
+      Beyaz zemin
     */
 
     ctx.fillStyle =
@@ -767,13 +1038,13 @@ body{
     ctx.fillRect(
       0,
       0,
-      cw,
-      ch
+      width,
+      height
     );
 
 
     /*
-      YÜKSEK KALİTE
+      Kalite
     */
 
     ctx.imageSmoothingEnabled =
@@ -785,7 +1056,7 @@ body{
 
 
     /*
-      COVER
+      Görsel oranı
     */
 
     const imageRatio =
@@ -794,8 +1065,8 @@ body{
 
 
     const canvasRatio =
-      cw /
-      ch;
+      width /
+      height;
 
 
     let drawWidth;
@@ -804,17 +1075,21 @@ body{
     let y;
 
 
+    /*
+      COVER
+    */
+
     if(
       canvasRatio >
       imageRatio
     ){
 
       drawWidth =
-        cw;
+        width;
 
 
       drawHeight =
-        cw /
+        width /
         imageRatio;
 
 
@@ -824,7 +1099,7 @@ body{
 
       y =
         (
-          ch -
+          height -
           drawHeight
         ) / 2;
 
@@ -833,17 +1108,17 @@ body{
     else{
 
       drawHeight =
-        ch;
+        height;
 
 
       drawWidth =
-        ch *
+        height *
         imageRatio;
 
 
       x =
         (
-          cw -
+          width -
           drawWidth
         ) / 2;
 
@@ -853,6 +1128,10 @@ body{
 
     }
 
+
+    /*
+      FRAME
+    */
 
     ctx.drawImage(
       img,
@@ -877,6 +1156,10 @@ body{
     value
   ){
 
+    /*
+      0 → 1
+    */
+
     frameProgress =
       Math.min(
         Math.max(
@@ -887,6 +1170,10 @@ body{
       );
 
 
+    /*
+      Frame
+    */
+
     targetFrame =
       frameProgress *
       (
@@ -894,15 +1181,59 @@ body{
       );
 
 
+    /*
+      OK DOLGUSU
+
+      0% → aşağıda
+      100% → yukarıda
+    */
+
     if(
       progressFill
     ){
 
-      progressFill.style.width =
+      progressFill.style.height =
         (
           frameProgress *
           100
         ) + "%";
+
+    }
+
+
+    /*
+      Yüzde
+    */
+
+    if(
+      percentLabel
+    ){
+
+      percentLabel.textContent =
+        Math.round(
+          frameProgress *
+          100
+        ) + "%";
+
+    }
+
+
+    /*
+      Ok başı
+
+      Başlangıçta gizli,
+      sona geldikçe görünür.
+    */
+
+    if(
+      arrowHeadFill
+    ){
+
+      arrowHeadFill.style.opacity =
+        frameProgress >
+        0.02
+          ? "1"
+          : "0";
 
     }
 
@@ -913,40 +1244,49 @@ body{
      WHEEL
      ===================================================== */
 
-  function onCanvasWheel(
+  function handleWheel(
     event
   ){
+
+    /*
+      Canvas üzerinde
+      wheel = frame ilerlemesi
+    */
 
     event.preventDefault();
 
 
     applyProgress(
       frameProgress +
-      event.deltaY *
-      WHEEL_SENSITIVITY
+      (
+        event.deltaY *
+        WHEEL_SENSITIVITY
+      )
     );
 
   }
 
 
   /* =====================================================
-     ANIMATION
+     ANIMATION LOOP
      ===================================================== */
 
   function animate(){
 
-    const diff =
+    const difference =
       targetFrame -
       currentFrame;
 
 
     if(
-      Math.abs(diff) >
+      Math.abs(
+        difference
+      ) >
       0.01
     ){
 
       currentFrame +=
-        diff *
+        difference *
         CONFIG.ease;
 
     }
@@ -979,6 +1319,10 @@ body{
 
   async function init(){
 
+    /*
+      Resize
+    */
+
     window.addEventListener(
       "resize",
       resizeCanvas,
@@ -988,55 +1332,79 @@ body{
     );
 
 
+    /*
+      Wheel
+    */
+
     canvas.addEventListener(
       "wheel",
-      onCanvasWheel,
+      handleWheel,
       {
         passive:false
       }
     );
 
 
+    /*
+      Canvas
+    */
+
     resizeCanvas();
 
 
+    /*
+      Frame preload
+    */
+
     await preloadFrames();
 
+
+    /*
+      İlk frame
+    */
 
     drawFrame(
       0
     );
 
 
+    /*
+      Başlangıç
+    */
+
     applyProgress(
       0
     );
 
 
+    /*
+      Animasyon
+    */
+
     animate();
 
 
     /*
-      PRELOADER KAPAT
+      Preloader kapat
     */
 
     if(
-      preloadOverlay
+      preload
     ){
 
-      preloadOverlay.classList.add(
+      preload.classList.add(
         "hidden"
       );
 
 
       setTimeout(
         ()=>{
-          
+
           if(
-            preloadOverlay
+            preload
           ){
 
-            preloadOverlay.remove();
+            preload.remove();
 
           }
 
