@@ -1,246 +1,1046 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Tapgo 3D Model</title>
+
 <style>
-    :root { --bg:#0e0e0e; --fg:#f5f5f0; --accent:#d4ff4f; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "Inter", Arial, sans-serif; overflow-x: hidden; }
-    .scroll-section { position: relative; height: 100vh; background: var(--bg); }
-    .sticky-wrap { position: relative; height: 100%; width: 100%; overflow: hidden; background: var(--bg); }
-    #sequence-canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 92vh; width: auto; max-width: 94vw; aspect-ratio: 478 / 850; display: block; background: var(--bg); }
-    .scroll-copy { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-    .beat { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; opacity: 0; transition: opacity .4s ease; width: min(90%, 640px); }
-    .beat.visible { opacity: 1; }
-    .beat h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: -.02em; margin-bottom: 12px; }
-    .beat h2 { font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 600; margin-bottom: 10px; }
-    .beat p { font-size: clamp(.95rem, 1.4vw, 1.15rem); opacity: .75; }
-    .beat:first-child { top: 18%; transform: translate(-50%, 0); }
-    .scroll-progress-track { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); width: min(60%, 320px); height: 2px; background: rgba(255,255,255,.15); border-radius: 2px; overflow: hidden; z-index: 5; }
-    .scroll-progress-fill { height: 100%; width: 0%; background: var(--accent); }
-    .scroll-hint { position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; opacity: .5; z-index: 5; animation: bob 1.8s ease-in-out infinite; }
-    @keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,6px); } }
-    #preload-overlay { position: fixed; inset: 0; z-index: 999; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: opacity .5s ease; }
-    #preload-overlay .preload-bar-track { width: 200px; height: 2px; background: rgba(255,255,255,.15); border-radius: 2px; overflow: hidden; }
-    #preload-overlay .preload-bar-fill { height: 100%; width: 0%; background: var(--accent); }
-    #preload-overlay.hidden { opacity: 0; pointer-events: none; }
+
+:root{
+  --bg:#0e0e0e;
+  --fg:#f5f5f0;
+  --accent:#d4ff4f;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Inter",
+    Arial,
+    sans-serif;
+  overflow-x:hidden;
+}
+
+.scroll-section{
+  position:relative;
+  height:100vh;
+  background:var(--bg);
+}
+
+.sticky-wrap{
+  position:relative;
+  height:100%;
+  width:100%;
+  overflow:hidden;
+  background:var(--bg);
+}
+
+#sequence-canvas{
+  position:absolute;
+  top:50%;
+  left:50%;
+
+  transform:
+    translate(-50%,-50%);
+
+  height:92vh;
+  width:auto;
+
+  max-width:94vw;
+
+  aspect-ratio:478 / 850;
+
+  display:block;
+
+  background:var(--bg);
+}
+
+.scroll-copy{
+  position:absolute;
+  inset:0;
+
+  pointer-events:none;
+
+  z-index:5;
+}
+
+.beat{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  transform:
+    translate(-50%,-50%);
+
+  text-align:center;
+
+  opacity:0;
+
+  transition:
+    opacity .4s ease;
+
+  width:min(90%,640px);
+}
+
+.beat.visible{
+  opacity:1;
+}
+
+.beat h1{
+  font-size:
+    clamp(
+      2.2rem,
+      6vw,
+      4.5rem
+    );
+
+  font-weight:700;
+
+  letter-spacing:-.02em;
+
+  margin-bottom:12px;
+}
+
+.beat h2{
+  font-size:
+    clamp(
+      1.6rem,
+      4vw,
+      2.6rem
+    );
+
+  font-weight:600;
+
+  margin-bottom:10px;
+}
+
+.beat p{
+  font-size:
+    clamp(
+      .95rem,
+      1.4vw,
+      1.15rem
+    );
+
+  opacity:.75;
+}
+
+.beat:first-child{
+  top:18%;
+
+  transform:
+    translate(-50%,0);
+}
+
+.scroll-progress-track{
+  position:absolute;
+
+  bottom:32px;
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  width:
+    min(
+      60%,
+      320px
+    );
+
+  height:2px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .15
+    );
+
+  border-radius:2px;
+
+  overflow:hidden;
+
+  z-index:5;
+}
+
+.scroll-progress-fill{
+  height:100%;
+
+  width:0%;
+
+  background:
+    var(--accent);
+}
+
+.scroll-hint{
+  position:absolute;
+
+  bottom:48px;
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  font-size:11px;
+
+  letter-spacing:.15em;
+
+  text-transform:uppercase;
+
+  opacity:.5;
+
+  z-index:5;
+
+  animation:
+    bob 1.8s ease-in-out infinite;
+}
+
+@keyframes bob{
+
+  0%,100%{
+    transform:
+      translate(-50%,0);
+  }
+
+  50%{
+    transform:
+      translate(-50%,6px);
+  }
+
+}
+
+#preload-overlay{
+  position:fixed;
+
+  inset:0;
+
+  z-index:999;
+
+  background:
+    var(--bg);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  transition:
+    opacity .5s ease;
+}
+
+#preload-overlay
+.preload-bar-track{
+  width:200px;
+  height:2px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .15
+    );
+
+  border-radius:2px;
+
+  overflow:hidden;
+}
+
+#preload-overlay
+.preload-bar-fill{
+  height:100%;
+
+  width:0%;
+
+  background:
+    var(--accent);
+}
+
+#preload-overlay.hidden{
+  opacity:0;
+
+  pointer-events:none;
+}
+
 </style>
 </head>
+
+
 <body>
+
 <div id="preload-overlay">
-    <div class="preload-bar-track">
-      <div class="preload-bar-fill" id="preload-bar-fill"></div>
+
+  <div class="preload-bar-track">
+
+    <div
+      class="preload-bar-fill"
+      id="preload-bar-fill">
     </div>
- 
-<section id="story" class="scroll-section">
-    <div class="sticky-wrap">
-      <canvas id="sequence-canvas"></canvas>
- 
-      <!-- Optional text beats that fade in/out with scroll progress -->
-      <div class="scroll-copy">
-        <div class="beat" data-range="0,0.12">
-          <h1>Introducing PRODUCT</h1>
-          <p>Scroll to see it come alive.</p>
-        </div>
-        <div class="beat" data-range="0.35,0.55">
-          <h2>Precision engineered</h2>
-          <p>Every detail, considered.</p>
-        </div>
-        <div class="beat" data-range="0.75,0.95">
-          <h2>Made for you</h2>
-          <p>Available now.</p>
-        </div>
+
+  </div>
+
+</div>
+
+
+<section
+  id="story"
+  class="scroll-section">
+
+  <div class="sticky-wrap">
+
+    <canvas
+      id="sequence-canvas">
+    </canvas>
+
+
+    <div class="scroll-copy">
+
+      <div
+        class="beat"
+        data-range="0,0.12">
+
+        <h1>
+          Introducing PRODUCT
+        </h1>
+
+        <p>
+          Scroll to see it come alive.
+        </p>
+
       </div>
- 
-      <div class="scroll-progress-track">
-        <div class="scroll-progress-fill" id="progress-fill"></div>
+
+
+      <div
+        class="beat"
+        data-range="0.35,0.55">
+
+        <h2>
+          Precision engineered
+        </h2>
+
+        <p>
+          Every detail, considered.
+        </p>
+
       </div>
- 
-      <div class="scroll-hint">Scroll</div>
+
+
+      <div
+        class="beat"
+        data-range="0.75,0.95">
+
+        <h2>
+          Made for you
+        </h2>
+
+        <p>
+          Available now.
+        </p>
+
+      </div>
+
     </div>
-  </section>
- 
+
+
+    <div
+      class="scroll-progress-track">
+
+      <div
+        class="scroll-progress-fill"
+        id="progress-fill">
+      </div>
+
+    </div>
+
+
+    <div class="scroll-hint">
+      Scroll
+    </div>
+
+  </div>
+
+</section>
+
+
 <script>
+
 (() => {
+
   "use strict";
- 
+
+
   /* =========================================================
-     CONFIG — edit these to match your frame export
+     CONFIG
      ========================================================= */
+
   const CONFIG = {
-    frameFolder: ".", // same repo root — images sit right next to this index.html
-    framePrefix: "ezgif-frame-", // ezgif-frame-001.jpg, ezgif-frame-002.jpg ...
-    frameExt: "jpg",             // jpg | png | webp
-    frameCount: 110,             // total number of frames you exported
-    padLength: 3,                // ezgif-frame-001 -> 3 digits
-    background: "#0e0e0e",       // MUST match --bg in styles.css and the frames' own background
-    ease: 0.08,                  // 0-1, lower = smoother/laggier, higher = snappier
+
+    /*
+      RESİMLERİN BULUNDUĞU KLASÖR
+
+      index.html ile aynı klasördeyse:
+    */
+
+    frameFolder: ".",
+
+
+    /*
+      ======================================================
+      SADECE BU KISMI DEĞİŞTİR
+      ======================================================
+
+      Buraya GitHub'daki gerçek dosya isimlerini yaz.
+
+      ÖRNEK:
+
+      frameNames: [
+        "001.jpg",
+        "002.jpg",
+        "003.jpg"
+      ]
+
+      veya:
+
+      frameNames: [
+        "frame_0001.jpg",
+        "frame_0002.jpg",
+        "frame_0003.jpg"
+      ]
+
+      ======================================================
+    */
+
+    frameNames: [
+
+      "ezgif-frame-001.jpg",
+      "ezgif-frame-002.jpg",
+      "ezgif-frame-003.jpg",
+      "ezgif-frame-004.jpg",
+      "ezgif-frame-005.jpg",
+      "ezgif-frame-006.jpg",
+      "ezgif-frame-007.jpg",
+      "ezgif-frame-008.jpg",
+      "ezgif-frame-009.jpg",
+      "ezgif-frame-010.jpg"
+
+      /*
+        BURAYA GERİ KALAN DOSYA İSİMLERİNİ DE
+        AYNI SIRADA EKLE.
+
+        ÖRN:
+
+        "ezgif-frame-011.jpg",
+        "ezgif-frame-012.jpg",
+        ...
+        "ezgif-frame-110.jpg"
+      */
+
+    ],
+
+
+    background:"#0e0e0e",
+
+
+    ease:0.08
+
   };
- 
+
+
   /* =========================================================
-     DOM refs
+     DOM
      ========================================================= */
-  const canvas = document.getElementById("sequence-canvas");
-  const ctx = canvas.getContext("2d");
-    const progressFill = document.getElementById("progress-fill");
-  const preloadOverlay = document.getElementById("preload-overlay");
-  const preloadBarFill = document.getElementById("preload-bar-fill");
-  const beats = Array.from(document.querySelectorAll(".beat"));
- 
-  canvas.style.background = CONFIG.background;
-  document.documentElement.style.setProperty("--bg", CONFIG.background);
- 
+
+  const canvas =
+    document.getElementById(
+      "sequence-canvas"
+    );
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+  const progressFill =
+    document.getElementById(
+      "progress-fill"
+    );
+
+  const preloadOverlay =
+    document.getElementById(
+      "preload-overlay"
+    );
+
+  const preloadBarFill =
+    document.getElementById(
+      "preload-bar-fill"
+    );
+
+  const beats =
+    Array.from(
+      document.querySelectorAll(
+        ".beat"
+      )
+    );
+
+
+  canvas.style.background =
+    CONFIG.background;
+
+  document.documentElement.style
+    .setProperty(
+      "--bg",
+      CONFIG.background
+    );
+
+
   /* =========================================================
-     Build frame URLs and preload
+     FRAME URL
      ========================================================= */
-  function frameUrl(index) {
-    const n = String(index).padStart(CONFIG.padLength, "0");
-    return `${CONFIG.frameFolder}/${CONFIG.framePrefix}${n}.${CONFIG.frameExt}`;
+
+  function frameUrl(index){
+
+    /*
+      frameNames dizisindeki
+      gerçek dosya adını kullanıyoruz.
+
+      ARTIK otomatik olarak
+      ezgif-frame-001 üretmiyoruz.
+    */
+
+    return (
+      CONFIG.frameFolder +
+      "/" +
+      CONFIG.frameNames[index]
+    );
+
   }
- 
-  const images = new Array(CONFIG.frameCount);
+
+
+  /* =========================================================
+     PRELOAD
+     ========================================================= */
+
+  const images =
+    new Array(
+      CONFIG.frameNames.length
+    );
+
   let loadedCount = 0;
- 
-  function preloadFrames() {
-    return new Promise((resolve) => {
-      for (let i = 0; i < CONFIG.frameCount; i++) {
-        const img = new Image();
-        img.src = frameUrl(i + 1); // frame_0001 is index 1
-        img.onload = img.onerror = () => {
-          loadedCount++;
-          const pct = Math.round((loadedCount / CONFIG.frameCount) * 100);
-          if (preloadBarFill) preloadBarFill.style.width = pct + "%";
-          if (loadedCount === CONFIG.frameCount) resolve();
-        };
-        images[i] = img;
+
+
+  function preloadFrames(){
+
+    return new Promise(
+      (resolve)=>{
+
+        const total =
+          CONFIG.frameNames.length;
+
+
+        if(total === 0){
+
+          resolve();
+
+          return;
+        }
+
+
+        for(
+          let i=0;
+          i<total;
+          i++
+        ){
+
+          const img =
+            new Image();
+
+
+          img.src =
+            frameUrl(i);
+
+
+          img.onload =
+            img.onerror =
+            ()=>{
+
+              loadedCount++;
+
+
+              const pct =
+                Math.round(
+                  (
+                    loadedCount /
+                    total
+                  ) * 100
+                );
+
+
+              if(
+                preloadBarFill
+              ){
+
+                preloadBarFill.style
+                  .width =
+                  pct + "%";
+
+              }
+
+
+              if(
+                loadedCount ===
+                total
+              ){
+
+                resolve();
+
+              }
+
+            };
+
+
+          images[i] =
+            img;
+
+        }
+
       }
-    });
+    );
+
   }
- 
+
+
   /* =========================================================
-     Canvas sizing (device-pixel-ratio aware, cover-fit draw)
+     CANVAS
      ========================================================= */
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
- 
-  function resizeCanvas() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawFrame(Math.round(currentFrame), true);
+
+  let dpr =
+    Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
+
+
+  function resizeCanvas(){
+
+    dpr =
+      Math.min(
+        window.devicePixelRatio || 1,
+        2
+      );
+
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    canvas.width =
+      Math.round(
+        rect.width * dpr
+      );
+
+
+    canvas.height =
+      Math.round(
+        rect.height * dpr
+      );
+
+
+    ctx.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+
+
+    drawFrame(
+      Math.round(
+        currentFrame
+      ),
+      true
+    );
+
   }
- 
-  function drawFrame(frameIndex, force) {
-    const clamped = Math.min(Math.max(frameIndex, 0), CONFIG.frameCount - 1);
-    const img = images[clamped];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
- 
-    const rect = canvas.getBoundingClientRect();
-    const cw = rect.width;
-    const ch = rect.height;
- 
-    // Fill background first so any letterboxing matches the page bg exactly
-    ctx.fillStyle = CONFIG.background;
-    ctx.fillRect(0, 0, cw, ch);
- 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
- 
-    // Cover-fit draw (like CSS background-size: cover)
-    const imgRatio = img.naturalWidth / img.naturalHeight;
-    const canvasRatio = cw / ch;
-    let drawW, drawH, dx, dy;
- 
-    if (canvasRatio > imgRatio) {
-      drawW = cw;
-      drawH = cw / imgRatio;
-      dx = 0;
-      dy = (ch - drawH) / 2;
-    } else {
-      drawH = ch;
-      drawW = ch * imgRatio;
-      dy = 0;
-      dx = (cw - drawW) / 2;
+
+
+  function drawFrame(
+    frameIndex,
+    force
+  ){
+
+    if(
+      !images.length
+    ){
+
+      return;
+
     }
- 
-    ctx.drawImage(img, dx, dy, drawW, drawH);
+
+
+    const clamped =
+      Math.min(
+        Math.max(
+          frameIndex,
+          0
+        ),
+        images.length - 1
+      );
+
+
+    const img =
+      images[clamped];
+
+
+    if(
+      !img ||
+      !img.complete ||
+      img.naturalWidth === 0
+    ){
+
+      return;
+
+    }
+
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    const cw =
+      rect.width;
+
+
+    const ch =
+      rect.height;
+
+
+    /*
+      BACKGROUND
+    */
+
+    ctx.fillStyle =
+      CONFIG.background;
+
+
+    ctx.fillRect(
+      0,
+      0,
+      cw,
+      ch
+    );
+
+
+    ctx.imageSmoothingEnabled =
+      true;
+
+
+    ctx.imageSmoothingQuality =
+      "high";
+
+
+    /*
+      COVER FIT
+    */
+
+    const imgRatio =
+      img.naturalWidth /
+      img.naturalHeight;
+
+
+    const canvasRatio =
+      cw / ch;
+
+
+    let drawW;
+    let drawH;
+    let dx;
+    let dy;
+
+
+    if(
+      canvasRatio >
+      imgRatio
+    ){
+
+      drawW =
+        cw;
+
+      drawH =
+        cw /
+        imgRatio;
+
+      dx =
+        0;
+
+      dy =
+        (ch - drawH) /
+        2;
+
+    }
+
+    else{
+
+      drawH =
+        ch;
+
+      drawW =
+        ch *
+        imgRatio;
+
+      dy =
+        0;
+
+      dx =
+        (cw - drawW) /
+        2;
+
+    }
+
+
+    ctx.drawImage(
+      img,
+      dx,
+      dy,
+      drawW,
+      drawH
+    );
+
   }
- 
+
+
   /* =========================================================
-     Frame progress -> driven by wheel scroll ONLY while the
-     mouse is over the canvas. Scrolling anywhere else (empty
-     margins, nav, other sections) scrolls the page normally.
+     PROGRESS
      ========================================================= */
-  let frameProgress = 0;   // 0..1, only changes via wheel-over-canvas
-  let targetFrame = 0;
-  let currentFrame = 0;
- 
-  const WHEEL_SENSITIVITY = 0.0016; // higher = fewer wheel ticks needed to reach frame 110
- 
-  function updateBeats(progress) {
-    beats.forEach((beat) => {
-      const [start, end] = beat.dataset.range.split(",").map(Number);
-      const visible = progress >= start && progress <= end;
-      beat.classList.toggle("visible", visible);
-    });
+
+  let frameProgress =
+    0;
+
+
+  let targetFrame =
+    0;
+
+
+  let currentFrame =
+    0;
+
+
+  const WHEEL_SENSITIVITY =
+    0.0016;
+
+
+  function updateBeats(
+    progress
+  ){
+
+    beats.forEach(
+      (beat)=>{
+
+        const [
+          start,
+          end
+        ] =
+          beat
+            .dataset
+            .range
+            .split(",")
+            .map(Number);
+
+
+        const visible =
+          progress >= start &&
+          progress <= end;
+
+
+        beat.classList.toggle(
+          "visible",
+          visible
+        );
+
+      }
+    );
+
   }
- 
-  function applyProgress(progress) {
-    frameProgress = Math.min(Math.max(progress, 0), 1);
-    targetFrame = frameProgress * (CONFIG.frameCount - 1);
-    progressFill.style.width = `${frameProgress * 100}%`;
-    updateBeats(frameProgress);
+
+
+  function applyProgress(
+    progress
+  ){
+
+    frameProgress =
+      Math.min(
+        Math.max(
+          progress,
+          0
+        ),
+        1
+      );
+
+
+    targetFrame =
+      frameProgress *
+      (
+        images.length - 1
+      );
+
+
+    progressFill.style.width =
+      (
+        frameProgress *
+        100
+      ) + "%";
+
+
+    updateBeats(
+      frameProgress
+    );
+
   }
- 
-  function onCanvasWheel(e) {
-    // Always capture wheel over the canvas — frames change, page never moves here.
+
+
+  /* =========================================================
+     WHEEL
+     ========================================================= */
+
+  function onCanvasWheel(
+    e
+  ){
+
     e.preventDefault();
-    applyProgress(frameProgress + e.deltaY * WHEEL_SENSITIVITY);
+
+
+    applyProgress(
+      frameProgress +
+      e.deltaY *
+      WHEEL_SENSITIVITY
+    );
+
   }
- 
-  function onWindowScroll() {}
- 
- 
+
+
   /* =========================================================
-     Animation loop — eases currentFrame toward targetFrame
+     ANIMATION
      ========================================================= */
-  function animate() {
-    const diff = targetFrame - currentFrame;
-    if (Math.abs(diff) > 0.01) {
-      currentFrame += diff * CONFIG.ease;
-    } else {
-      currentFrame = targetFrame;
+
+  function animate(){
+
+    const diff =
+      targetFrame -
+      currentFrame;
+
+
+    if(
+      Math.abs(diff) >
+      0.01
+    ){
+
+      currentFrame +=
+        diff *
+        CONFIG.ease;
+
     }
-    drawFrame(Math.round(currentFrame));
-    requestAnimationFrame(animate);
+
+    else{
+
+      currentFrame =
+        targetFrame;
+
+    }
+
+
+    drawFrame(
+      Math.round(
+        currentFrame
+      )
+    );
+
+
+    requestAnimationFrame(
+      animate
+    );
+
   }
- 
+
+
   /* =========================================================
-     Init
+     INIT
      ========================================================= */
-  async function init() {
-    window.addEventListener("resize", resizeCanvas, { passive: true });
-    window.addEventListener("scroll", onWindowScroll, { passive: true });
-    canvas.addEventListener("wheel", onCanvasWheel, { passive: false });
- 
+
+  async function init(){
+
+    window.addEventListener(
+      "resize",
+      resizeCanvas,
+      {
+        passive:true
+      }
+    );
+
+
+    canvas.addEventListener(
+      "wheel",
+      onCanvasWheel,
+      {
+        passive:false
+      }
+    );
+
+
     resizeCanvas();
+
+
     await preloadFrames();
- 
-    drawFrame(0, true);
-    applyProgress(0);
+
+
+    drawFrame(
+      0,
+      true
+    );
+
+
+    applyProgress(
+      0
+    );
+
+
     animate();
- 
-    preloadOverlay.classList.add("hidden");
-    setTimeout(() => preloadOverlay.remove(), 600);
+
+
+    preloadOverlay.classList.add(
+      "hidden"
+    );
+
+
+    setTimeout(
+      ()=>{
+        preloadOverlay.remove();
+      },
+      600
+    );
+
   }
- 
+
+
   init();
+
 })();
- 
+
 </script>
+
 </body>
 </html>
- 
