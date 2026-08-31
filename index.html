@@ -11,48 +11,36 @@
 
 <title>TapVia NFC</title>
 
-
 <style>
 
-/* =====================================================
+/* =========================================================
    ROOT
-   ===================================================== */
+   ========================================================= */
 
 :root{
-
   --bg:#ffffff;
-
   --fg:#222222;
-
   --accent:#e6005c;
-
 }
 
 
-/* =====================================================
+/* =========================================================
    RESET
-   ===================================================== */
+   ========================================================= */
 
 *{
-
   box-sizing:border-box;
-
   margin:0;
-
   padding:0;
-
 }
-
 
 html,
 body{
 
   width:100%;
-
   height:100%;
 
   margin:0;
-
   padding:0;
 
   background:#ffffff;
@@ -67,20 +55,18 @@ body{
     sans-serif;
 
   overflow:hidden;
-
 }
 
 
-/* =====================================================
-   ANA ALAN
-   ===================================================== */
+/* =========================================================
+   MAIN
+   ========================================================= */
 
 .scroll-section{
 
   position:relative;
 
   width:100%;
-
   height:100vh;
 
   min-height:650px;
@@ -88,7 +74,6 @@ body{
   background:#ffffff;
 
   overflow:hidden;
-
 }
 
 
@@ -97,19 +82,17 @@ body{
   position:relative;
 
   width:100%;
-
   height:100%;
 
   background:#ffffff;
 
   overflow:hidden;
-
 }
 
 
-/* =====================================================
-   CANVAS / ÜRÜN GÖRSELİ
-   ===================================================== */
+/* =========================================================
+   PRODUCT CANVAS
+   ========================================================= */
 
 #sequence-canvas{
 
@@ -119,10 +102,18 @@ body{
 
   left:auto;
 
+  /*
+    Sağdan 1.5 mm
+  */
+
   right:1.5mm;
 
   transform:
     translateY(-50%);
+
+  /*
+    BÜYÜK ÜRÜN
+  */
 
   height:104vh;
 
@@ -139,41 +130,60 @@ body{
 }
 
 
-/* =====================================================
-   VERTICAL PROGRESS AREA
-   ===================================================== */
+/* =========================================================
+   DİKEY KAYDIRMA KONTROLÜ
 
-.tapvia-progress{
+   OK KARTIN SOLUNDA.
+   KARTIN İÇİNDE DEĞİL.
+   ========================================================= */
+
+.tapvia-scroll-control{
 
   position:absolute;
 
   top:50%;
 
-  right:calc(
-    1.5mm + 96vh * 0.5647
-  );
+  /*
+    Canvas genişliği:
+    104vh * 478 / 850
+    ≈ 58.47vh
+
+    Kontrolü kartın soluna taşıyoruz.
+  */
+
+  right:
+    calc(
+      1.5mm +
+      58.47vh +
+      34px
+    );
 
   transform:
     translateY(-50%);
 
-  width:46px;
+  width:52px;
 
-  height:62vh;
+  height:58vh;
 
-  z-index:20;
+  min-height:320px;
+
+  z-index:50;
 
   display:flex;
+
+  flex-direction:column;
 
   align-items:center;
 
   justify-content:center;
 
+  pointer-events:none;
 }
 
 
-/* =====================================================
-   OKUN DIŞ GÖVDESİ
-   ===================================================== */
+/* =========================================================
+   OK GÖVDESİ
+   ========================================================= */
 
 .tapvia-arrow{
 
@@ -183,8 +193,6 @@ body{
 
   height:100%;
 
-  border-radius:8px;
-
   background:
     rgba(
       230,
@@ -193,14 +201,14 @@ body{
       .14
     );
 
+  border-radius:10px;
+
 }
 
 
-/* =====================================================
-   OKUN İÇ DOLGUSU
-
-   Aşağıdan yukarı doğru dolar.
-   ===================================================== */
+/* =========================================================
+   DOLAN OK
+   ========================================================= */
 
 .tapvia-arrow-fill{
 
@@ -214,139 +222,95 @@ body{
 
   height:0%;
 
-  border-radius:8px;
-
   background:
     var(--accent);
 
-  transition:
-    height .08s linear;
+  border-radius:10px;
 
 }
 
 
-/* =====================================================
-   OK BAŞI / ÜÇGEN
-
-   Üst tarafa bakıyor.
-   ===================================================== */
+/* =========================================================
+   OK BAŞI - SABİT
+   ========================================================= */
 
 .tapvia-arrow-head{
 
   position:absolute;
 
-  top:-2px;
+  top:-1px;
 
   left:50%;
-
-  width:0;
-
-  height:0;
 
   transform:
     translateX(-50%);
 
+  width:0;
+  height:0;
+
   border-left:
-    14px solid transparent;
+    15px solid transparent;
 
   border-right:
-    14px solid transparent;
+    15px solid transparent;
 
   border-bottom:
-    20px solid
+    23px solid
     rgba(
       230,
       0,
       92,
       .18
     );
-
 }
 
 
-/* =====================================================
-   DOLU OK BAŞI
-
-   İlerledikçe görünür.
-   ===================================================== */
+/* =========================================================
+   OK BAŞI - DOLU
+   ========================================================= */
 
 .tapvia-arrow-head-fill{
 
   position:absolute;
 
-  top:-2px;
+  top:-1px;
 
   left:50%;
-
-  width:0;
-
-  height:0;
 
   transform:
     translateX(-50%);
 
+  width:0;
+  height:0;
+
   border-left:
-    14px solid transparent;
+    15px solid transparent;
 
   border-right:
-    14px solid transparent;
+    15px solid transparent;
 
   border-bottom:
-    20px solid
+    23px solid
     var(--accent);
 
   opacity:0;
-
-  transition:
-    opacity .12s linear;
-
 }
 
 
-/* =====================================================
-   KAYDIR YAZISI
-   ===================================================== */
-
-.tapvia-scroll-label{
-
-  position:absolute;
-
-  top:calc(100% + 16px);
-
-  left:50%;
-
-  transform:
-    translateX(-50%);
-
-  white-space:nowrap;
-
-  color:#333333;
-
-  font-size:12px;
-
-  font-weight:600;
-
-  letter-spacing:.12em;
-
-  text-transform:uppercase;
-
-}
-
-
-/* =====================================================
+/* =========================================================
    YÜZDE
-   ===================================================== */
+   ========================================================= */
 
 .tapvia-percent{
 
   position:absolute;
 
+  left:50%;
+
   bottom:
     calc(
-      100% + 15px
+      100% + 10px
     );
-
-  left:50%;
 
   transform:
     translateX(-50%);
@@ -360,75 +324,44 @@ body{
   letter-spacing:.08em;
 
   white-space:nowrap;
-
 }
 
 
-/* =====================================================
-   MOBİL
-   ===================================================== */
+/* =========================================================
+   KAYDIR
+   ========================================================= */
 
-@media(max-width:700px){
+.tapvia-scroll-label{
 
-  #sequence-canvas{
+  position:absolute;
 
-    right:1.5mm;
+  left:50%;
 
-    height:94vh;
+  top:
+    calc(
+      100% + 15px
+    );
 
-  }
+  transform:
+    translateX(-50%);
 
+  color:#222222;
 
-  .tapvia-progress{
+  font-size:12px;
 
-    /*
-      Mobilde ok görselin biraz
-      daha solunda.
-    */
+  font-weight:700;
 
-    right:
-      calc(
-        1.5mm + 84vh * 0.5647
-      );
+  letter-spacing:.14em;
 
-    height:56vh;
+  white-space:nowrap;
 
-    width:42px;
-
-  }
-
-
-  .tapvia-arrow{
-
-    width:7px;
-
-  }
-
-
-  .tapvia-arrow-head,
-  .tapvia-arrow-head-fill{
-
-    border-left-width:12px;
-
-    border-right-width:12px;
-
-    border-bottom-width:18px;
-
-  }
-
-
-  .tapvia-scroll-label{
-
-    font-size:11px;
-
-  }
-
+  text-transform:uppercase;
 }
 
 
-/* =====================================================
+/* =========================================================
    PRELOADER
-   ===================================================== */
+   ========================================================= */
 
 #preload-overlay{
 
@@ -436,11 +369,10 @@ body{
 
   inset:0;
 
-  width:100%;
-
-  height:100%;
-
   z-index:9999;
+
+  width:100%;
+  height:100%;
 
   background:#ffffff;
 
@@ -457,7 +389,6 @@ body{
   transition:
     opacity .5s ease,
     visibility .5s ease;
-
 }
 
 
@@ -468,7 +399,6 @@ body{
   visibility:hidden;
 
   pointer-events:none;
-
 }
 
 
@@ -489,7 +419,6 @@ body{
   overflow:hidden;
 
   border-radius:2px;
-
 }
 
 
@@ -501,6 +430,81 @@ body{
 
   background:
     var(--accent);
+}
+
+
+/* =========================================================
+   MOBİL
+   ========================================================= */
+
+@media(max-width:700px){
+
+  .scroll-section{
+
+    min-height:600px;
+
+  }
+
+
+  #sequence-canvas{
+
+    right:1.5mm;
+
+    height:94vh;
+
+    max-width:none;
+
+  }
+
+
+  /*
+    Mobilde canvas genişliği:
+    94vh * 478 / 850
+    ≈ 52.91vh
+  */
+
+  .tapvia-scroll-control{
+
+    right:
+      calc(
+        1.5mm +
+        52.91vh +
+        24px
+      );
+
+    height:54vh;
+
+    min-height:280px;
+
+    width:40px;
+
+  }
+
+
+  .tapvia-arrow{
+
+    width:7px;
+
+  }
+
+
+  .tapvia-arrow-head,
+  .tapvia-arrow-head-fill{
+
+    border-left-width:12px;
+
+    border-right-width:12px;
+
+    border-bottom-width:19px;
+
+  }
+
+
+  .tapvia-scroll-label{
+
+    font-size:10px;
+
+  }
 
 }
 
@@ -512,9 +516,9 @@ body{
 <body>
 
 
-<!-- =====================================================
-     PRELOAD
-     ===================================================== -->
+<!-- =========================================================
+     PRELOADER
+     ========================================================= -->
 
 <div id="preload-overlay">
 
@@ -530,9 +534,9 @@ body{
 </div>
 
 
-<!-- =====================================================
+<!-- =========================================================
      MAIN
-     ===================================================== -->
+     ========================================================= -->
 
 <section
   id="story"
@@ -542,25 +546,25 @@ body{
   <div class="sticky-wrap">
 
 
-    <!-- =================================================
-         ÜRÜN
-         ================================================= -->
+    <!-- =====================================================
+         PRODUCT
+         ===================================================== -->
 
     <canvas
       id="sequence-canvas">
     </canvas>
 
 
-    <!-- =================================================
-         VERTICAL PROGRESS
-         ================================================= -->
+    <!-- =====================================================
+         OUTSIDE VERTICAL ARROW
+         ===================================================== -->
 
     <div
-      class="tapvia-progress"
-      id="tapvia-progress">
+      class="tapvia-scroll-control"
+      id="tapvia-scroll-control">
 
 
-      <!-- YÜZDE -->
+      <!-- PERCENT -->
 
       <div
         class="tapvia-percent"
@@ -571,13 +575,12 @@ body{
       </div>
 
 
-      <!-- OK -->
+      <!-- ARROW -->
 
-      <div
-        class="tapvia-arrow">
+      <div class="tapvia-arrow">
 
 
-        <!-- DIŞ GÖVDE DOLGUSU -->
+        <!-- FILL -->
 
         <div
           class="tapvia-arrow-fill"
@@ -585,14 +588,14 @@ body{
         </div>
 
 
-        <!-- SABİT OK BAŞI -->
+        <!-- HEAD -->
 
         <div
           class="tapvia-arrow-head">
         </div>
 
 
-        <!-- DOLAN OK BAŞI -->
+        <!-- FILLED HEAD -->
 
         <div
           class="tapvia-arrow-head-fill"
@@ -603,7 +606,7 @@ body{
       </div>
 
 
-      <!-- KAYDIR -->
+      <!-- LABEL -->
 
       <div
         class="tapvia-scroll-label">
@@ -635,8 +638,8 @@ body{
   const CONFIG = {
 
     /*
-      Frame'ler index.html ile
-      AYNI klasörde.
+      GitHub'daki frame dosyaları
+      index.html ile aynı klasörde.
     */
 
     frameFolder:
@@ -666,7 +669,7 @@ body{
 
 
     /*
-      Beyaz arka plan
+      Beyaz
     */
 
     background:
@@ -674,7 +677,7 @@ body{
 
 
     /*
-      Frame yumuşaklığı
+      Smoothness
     */
 
     ease:
@@ -705,9 +708,9 @@ body{
     );
 
 
-  const progressArea =
+  const arrowHeadFill =
     document.getElementById(
-      "tapvia-progress"
+      "tapvia-arrow-head-fill"
     );
 
 
@@ -717,41 +720,23 @@ body{
     );
 
 
-  const arrowHeadFill =
-    document.getElementById(
-      "tapvia-arrow-head-fill"
-    );
-
-
-  const preload =
+  const preloadOverlay =
     document.getElementById(
       "preload-overlay"
     );
 
 
-  const preloadFill =
+  const preloadBarFill =
     document.getElementById(
       "preload-bar-fill"
     );
-
-
-  if(
-    !canvas ||
-    !ctx
-  ){
-
-    return;
-
-  }
 
 
   /* =====================================================
      FRAME URL
      ===================================================== */
 
-  function frameUrl(
-    index
-  ){
+  function frameUrl(index){
 
     const number =
       String(
@@ -805,8 +790,8 @@ body{
       (resolve)=>{
 
         for(
-          let i = 0;
-          i < CONFIG.frameCount;
+          let i=0;
+          i<CONFIG.frameCount;
           i++
         ){
 
@@ -834,10 +819,10 @@ body{
 
 
               if(
-                preloadFill
+                preloadBarFill
               ){
 
-                preloadFill.style.width =
+                preloadBarFill.style.width =
                   percent + "%";
 
               }
@@ -877,10 +862,10 @@ body{
 
 
               if(
-                preloadFill
+                preloadBarFill
               ){
 
-                preloadFill.style.width =
+                preloadBarFill.style.width =
                   percent + "%";
 
               }
@@ -910,26 +895,24 @@ body{
 
 
   /* =====================================================
-     CANVAS
+     STATE
      ===================================================== */
+
+  let currentFrame =
+    0;
+
+  let targetFrame =
+    0;
+
+  let progress =
+    0;
+
 
   let dpr =
     Math.min(
       window.devicePixelRatio || 1,
       2
     );
-
-
-  let currentFrame =
-    0;
-
-
-  let targetFrame =
-    0;
-
-
-  let frameProgress =
-    0;
 
 
   /* =====================================================
@@ -1028,7 +1011,7 @@ body{
 
 
     /*
-      Beyaz zemin
+      WHITE BACKGROUND
     */
 
     ctx.fillStyle =
@@ -1043,10 +1026,6 @@ body{
     );
 
 
-    /*
-      Kalite
-    */
-
     ctx.imageSmoothingEnabled =
       true;
 
@@ -1056,7 +1035,7 @@ body{
 
 
     /*
-      Görsel oranı
+      COVER FIT
     */
 
     const imageRatio =
@@ -1074,10 +1053,6 @@ body{
     let x;
     let y;
 
-
-    /*
-      COVER
-    */
 
     if(
       canvasRatio >
@@ -1129,10 +1104,6 @@ body{
     }
 
 
-    /*
-      FRAME
-    */
-
     ctx.drawImage(
       img,
       x,
@@ -1156,11 +1127,7 @@ body{
     value
   ){
 
-    /*
-      0 → 1
-    */
-
-    frameProgress =
+    progress =
       Math.min(
         Math.max(
           value,
@@ -1170,72 +1137,44 @@ body{
       );
 
 
-    /*
-      Frame
-    */
-
     targetFrame =
-      frameProgress *
+      progress *
       (
         CONFIG.frameCount - 1
       );
 
 
     /*
-      OK DOLGUSU
-
-      0% → aşağıda
-      100% → yukarıda
+      Arrow fill:
+      bottom → top
     */
 
-    if(
-      progressFill
-    ){
-
-      progressFill.style.height =
-        (
-          frameProgress *
-          100
-        ) + "%";
-
-    }
+    progressFill.style.height =
+      (
+        progress *
+        100
+      ) + "%";
 
 
     /*
-      Yüzde
+      Percentage
     */
 
-    if(
-      percentLabel
-    ){
-
-      percentLabel.textContent =
-        Math.round(
-          frameProgress *
-          100
-        ) + "%";
-
-    }
+    percentLabel.textContent =
+      Math.round(
+        progress *
+        100
+      ) + "%";
 
 
     /*
-      Ok başı
-
-      Başlangıçta gizli,
-      sona geldikçe görünür.
+      Arrow head
     */
 
-    if(
-      arrowHeadFill
-    ){
-
-      arrowHeadFill.style.opacity =
-        frameProgress >
-        0.02
-          ? "1"
-          : "0";
-
-    }
+    arrowHeadFill.style.opacity =
+      progress > 0.01
+        ? "1"
+        : "0";
 
   }
 
@@ -1249,19 +1188,17 @@ body{
   ){
 
     /*
-      Canvas üzerinde
-      wheel = frame ilerlemesi
+      Animasyonun üzerine gelince
+      wheel hareketi frame değiştirir.
     */
 
     event.preventDefault();
 
 
     applyProgress(
-      frameProgress +
-      (
-        event.deltaY *
-        WHEEL_SENSITIVITY
-      )
+      progress +
+      event.deltaY *
+      WHEEL_SENSITIVITY
     );
 
   }
@@ -1319,10 +1256,6 @@ body{
 
   async function init(){
 
-    /*
-      Resize
-    */
-
     window.addEventListener(
       "resize",
       resizeCanvas,
@@ -1331,10 +1264,6 @@ body{
       }
     );
 
-
-    /*
-      Wheel
-    */
 
     canvas.addEventListener(
       "wheel",
@@ -1345,54 +1274,35 @@ body{
     );
 
 
-    /*
-      Canvas
-    */
-
     resizeCanvas();
 
 
-    /*
-      Frame preload
-    */
-
     await preloadFrames();
 
-
-    /*
-      İlk frame
-    */
 
     drawFrame(
       0
     );
 
 
-    /*
-      Başlangıç
-    */
-
     applyProgress(
       0
     );
 
 
-    /*
-      Animasyon
-    */
-
     animate();
 
 
     /*
-      Preloader kapat
+      Preloader
+      kapat
     */
 
     if(
-      preload
+      preloadOverlay
     ){
 
-      preload.classList.add(
+      preloadOverlay.classList.add(
         "hidden"
       );
 
@@ -1401,10 +1311,10 @@ body{
         ()=>{
 
           if(
-            preload
+            preloadOverlay
           ){
 
-            preload.remove();
+            preloadOverlay.remove();
 
           }
 
