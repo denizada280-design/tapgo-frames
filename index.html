@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>Tapgo 3D Model</title>
 
 <style>
 
-:root{
+:root {
   --bg:#0e0e0e;
   --fg:#f5f5f0;
   --accent:#d4ff4f;
 }
 
-*{
+* {
   box-sizing:border-box;
   margin:0;
   padding:0;
 }
 
 html,
-body{
+body {
   background:var(--bg);
   color:var(--fg);
   font-family:
@@ -33,13 +33,13 @@ body{
   overflow-x:hidden;
 }
 
-.scroll-section{
+.scroll-section {
   position:relative;
   height:100vh;
   background:var(--bg);
 }
 
-.sticky-wrap{
+.sticky-wrap {
   position:relative;
   height:100%;
   width:100%;
@@ -47,15 +47,17 @@ body{
   background:var(--bg);
 }
 
-#sequence-canvas{
+#sequence-canvas {
   position:absolute;
+
   top:50%;
   left:50%;
 
   transform:
-    translate(-50%,-50%);
+    translate(-50%, -50%);
 
   height:92vh;
+
   width:auto;
 
   max-width:94vw;
@@ -67,8 +69,9 @@ body{
   background:var(--bg);
 }
 
-.scroll-copy{
+.scroll-copy {
   position:absolute;
+
   inset:0;
 
   pointer-events:none;
@@ -76,14 +79,14 @@ body{
   z-index:5;
 }
 
-.beat{
+.beat {
   position:absolute;
 
   left:50%;
   top:50%;
 
   transform:
-    translate(-50%,-50%);
+    translate(-50%, -50%);
 
   text-align:center;
 
@@ -92,14 +95,15 @@ body{
   transition:
     opacity .4s ease;
 
-  width:min(90%,640px);
+  width:
+    min(90%, 640px);
 }
 
-.beat.visible{
+.beat.visible {
   opacity:1;
 }
 
-.beat h1{
+.beat h1 {
   font-size:
     clamp(
       2.2rem,
@@ -114,7 +118,7 @@ body{
   margin-bottom:12px;
 }
 
-.beat h2{
+.beat h2 {
   font-size:
     clamp(
       1.6rem,
@@ -127,7 +131,7 @@ body{
   margin-bottom:10px;
 }
 
-.beat p{
+.beat p {
   font-size:
     clamp(
       .95rem,
@@ -138,14 +142,14 @@ body{
   opacity:.75;
 }
 
-.beat:first-child{
+.beat:first-child {
   top:18%;
 
   transform:
-    translate(-50%,0);
+    translate(-50%, 0);
 }
 
-.scroll-progress-track{
+.scroll-progress-track {
   position:absolute;
 
   bottom:32px;
@@ -155,10 +159,7 @@ body{
     translateX(-50%);
 
   width:
-    min(
-      60%,
-      320px
-    );
+    min(60%, 320px);
 
   height:2px;
 
@@ -177,7 +178,7 @@ body{
   z-index:5;
 }
 
-.scroll-progress-fill{
+.scroll-progress-fill {
   height:100%;
 
   width:0%;
@@ -186,7 +187,7 @@ body{
     var(--accent);
 }
 
-.scroll-hint{
+.scroll-hint {
   position:absolute;
 
   bottom:48px;
@@ -209,21 +210,22 @@ body{
     bob 1.8s ease-in-out infinite;
 }
 
-@keyframes bob{
+@keyframes bob {
 
-  0%,100%{
+  0%,
+  100% {
     transform:
-      translate(-50%,0);
+      translate(-50%, 0);
   }
 
-  50%{
+  50% {
     transform:
-      translate(-50%,6px);
+      translate(-50%, 6px);
   }
 
 }
 
-#preload-overlay{
+#preload-overlay {
   position:fixed;
 
   inset:0;
@@ -236,6 +238,7 @@ body{
   display:flex;
 
   align-items:center;
+
   justify-content:center;
 
   transition:
@@ -243,8 +246,10 @@ body{
 }
 
 #preload-overlay
-.preload-bar-track{
+.preload-bar-track {
+
   width:200px;
+
   height:2px;
 
   background:
@@ -261,7 +266,8 @@ body{
 }
 
 #preload-overlay
-.preload-bar-fill{
+.preload-bar-fill {
+
   height:100%;
 
   width:0%;
@@ -270,7 +276,8 @@ body{
     var(--accent);
 }
 
-#preload-overlay.hidden{
+#preload-overlay.hidden {
+
   opacity:0;
 
   pointer-events:none;
@@ -281,6 +288,9 @@ body{
 
 
 <body>
+
+
+<!-- PRELOAD -->
 
 <div id="preload-overlay">
 
@@ -296,18 +306,28 @@ body{
 </div>
 
 
+<!-- =====================================================
+     STORY SECTION
+     ===================================================== -->
+
 <section
   id="story"
   class="scroll-section">
 
   <div class="sticky-wrap">
 
+
+    <!-- FRAME CANVAS -->
+
     <canvas
       id="sequence-canvas">
     </canvas>
 
 
+    <!-- TEXT -->
+
     <div class="scroll-copy">
+
 
       <div
         class="beat"
@@ -353,8 +373,11 @@ body{
 
       </div>
 
+
     </div>
 
+
+    <!-- PROGRESS -->
 
     <div
       class="scroll-progress-track">
@@ -367,9 +390,12 @@ body{
     </div>
 
 
+    <!-- HINT -->
+
     <div class="scroll-hint">
       Scroll
     </div>
+
 
   </div>
 
@@ -390,70 +416,43 @@ body{
   const CONFIG = {
 
     /*
-      RESİMLERİN BULUNDUĞU KLASÖR
-
-      index.html ile aynı klasördeyse:
+      index.html ile resimler aynı klasörde.
     */
 
     frameFolder: ".",
 
 
     /*
-      ======================================================
-      SADECE BU KISMI DEĞİŞTİR
-      ======================================================
+      RESİM ADI FORMATIN:
 
-      Buraya GitHub'daki gerçek dosya isimlerini yaz.
+      ezgif-frame-001.jpg
+      ezgif-frame-002.jpg
+      ezgif-frame-003.jpg
+      ...
+      ezgif-frame-110.jpg
 
-      ÖRNEK:
-
-      frameNames: [
-        "001.jpg",
-        "002.jpg",
-        "003.jpg"
-      ]
-
-      veya:
-
-      frameNames: [
-        "frame_0001.jpg",
-        "frame_0002.jpg",
-        "frame_0003.jpg"
-      ]
-
-      ======================================================
+      Burada xxx kısmını otomatik oluşturuyoruz.
     */
 
-    frameNames: [
+    framePrefix: "ezgif-frame-",
 
-      "ezgif-frame-001.jpg",
-      "ezgif-frame-002.jpg",
-      "ezgif-frame-003.jpg",
-      "ezgif-frame-004.jpg",
-      "ezgif-frame-005.jpg",
-      "ezgif-frame-006.jpg",
-      "ezgif-frame-007.jpg",
-      "ezgif-frame-008.jpg",
-      "ezgif-frame-009.jpg",
-      "ezgif-frame-010.jpg"
+    frameExt: "jpg",
 
-      /*
-        BURAYA GERİ KALAN DOSYA İSİMLERİNİ DE
-        AYNI SIRADA EKLE.
+    frameCount: 110,
 
-        ÖRN:
+    padLength: 3,
 
-        "ezgif-frame-011.jpg",
-        "ezgif-frame-012.jpg",
-        ...
-        "ezgif-frame-110.jpg"
-      */
 
-    ],
-
+    /*
+      Arka plan
+    */
 
     background:"#0e0e0e",
 
+
+    /*
+      Frame geçiş yumuşaklığı
+    */
 
     ease:0.08
 
@@ -474,20 +473,24 @@ body{
       "2d"
     );
 
+
   const progressFill =
     document.getElementById(
       "progress-fill"
     );
+
 
   const preloadOverlay =
     document.getElementById(
       "preload-overlay"
     );
 
+
   const preloadBarFill =
     document.getElementById(
       "preload-bar-fill"
     );
+
 
   const beats =
     Array.from(
@@ -500,6 +503,7 @@ body{
   canvas.style.background =
     CONFIG.background;
 
+
   document.documentElement.style
     .setProperty(
       "--bg",
@@ -508,60 +512,68 @@ body{
 
 
   /* =========================================================
-     FRAME URL
+     FRAME URL OLUŞTURMA
      ========================================================= */
 
-  function frameUrl(index){
+  function frameUrl(index) {
 
     /*
-      frameNames dizisindeki
-      gerçek dosya adını kullanıyoruz.
-
-      ARTIK otomatik olarak
-      ezgif-frame-001 üretmiyoruz.
+      0 -> ezgif-frame-001.jpg
+      1 -> ezgif-frame-002.jpg
+      2 -> ezgif-frame-003.jpg
+      ...
+      109 -> ezgif-frame-110.jpg
     */
+
+    const number =
+      String(index + 1)
+        .padStart(
+          CONFIG.padLength,
+          "0"
+        );
+
 
     return (
       CONFIG.frameFolder +
       "/" +
-      CONFIG.frameNames[index]
+      CONFIG.framePrefix +
+      number +
+      "." +
+      CONFIG.frameExt
     );
 
   }
 
 
   /* =========================================================
-     PRELOAD
+     IMAGE STORAGE
      ========================================================= */
 
   const images =
     new Array(
-      CONFIG.frameNames.length
+      CONFIG.frameCount
     );
+
 
   let loadedCount = 0;
 
 
-  function preloadFrames(){
+  /* =========================================================
+     PRELOAD
+     ========================================================= */
+
+  function preloadFrames() {
 
     return new Promise(
-      (resolve)=>{
+      (resolve) => {
 
-        const total =
-          CONFIG.frameNames.length;
-
-
-        if(total === 0){
-
-          resolve();
-
-          return;
-        }
-
+        /*
+          Her frame'i yükle
+        */
 
         for(
-          let i=0;
-          i<total;
+          let i = 0;
+          i < CONFIG.frameCount;
           i++
         ){
 
@@ -569,22 +581,31 @@ body{
             new Image();
 
 
+          /*
+            Burada tam olarak:
+
+            ezgif-frame-001.jpg
+            ezgif-frame-002.jpg
+            ...
+
+            okunuyor.
+          */
+
           img.src =
             frameUrl(i);
 
 
           img.onload =
-            img.onerror =
-            ()=>{
+            () => {
 
               loadedCount++;
 
 
-              const pct =
+              const percent =
                 Math.round(
                   (
                     loadedCount /
-                    total
+                    CONFIG.frameCount
                   ) * 100
                 );
 
@@ -593,16 +614,63 @@ body{
                 preloadBarFill
               ){
 
-                preloadBarFill.style
-                  .width =
-                  pct + "%";
+                preloadBarFill.style.width =
+                  percent + "%";
 
               }
 
 
               if(
                 loadedCount ===
-                total
+                CONFIG.frameCount
+              ){
+
+                resolve();
+
+              }
+
+            };
+
+
+          img.onerror =
+            () => {
+
+              /*
+                Hatalı resim olsa bile
+                preload kilitlenmesin.
+              */
+
+              loadedCount++;
+
+
+              const percent =
+                Math.round(
+                  (
+                    loadedCount /
+                    CONFIG.frameCount
+                  ) * 100
+                );
+
+
+              if(
+                preloadBarFill
+              ){
+
+                preloadBarFill.style.width =
+                  percent + "%";
+
+              }
+
+
+              console.warn(
+                "Frame yüklenemedi:",
+                img.src
+              );
+
+
+              if(
+                loadedCount ===
+                CONFIG.frameCount
               ){
 
                 resolve();
@@ -624,7 +692,7 @@ body{
 
 
   /* =========================================================
-     CANVAS
+     CANVAS SCALE
      ========================================================= */
 
   let dpr =
@@ -634,7 +702,7 @@ body{
     );
 
 
-  function resizeCanvas(){
+  function resizeCanvas() {
 
     dpr =
       Math.min(
@@ -679,18 +747,17 @@ body{
   }
 
 
+  /* =========================================================
+     DRAW FRAME
+     ========================================================= */
+
   function drawFrame(
     frameIndex,
     force
   ){
 
-    if(
-      !images.length
-    ){
-
-      return;
-
-    }
+    const maxIndex =
+      images.length - 1;
 
 
     const clamped =
@@ -699,13 +766,18 @@ body{
           frameIndex,
           0
         ),
-        images.length - 1
+        maxIndex
       );
 
 
     const img =
       images[clamped];
 
+
+    /*
+      Frame henüz yüklenmediyse
+      bekle.
+    */
 
     if(
       !img ||
@@ -731,7 +803,7 @@ body{
 
 
     /*
-      BACKGROUND
+      Arka plan
     */
 
     ctx.fillStyle =
@@ -758,7 +830,7 @@ body{
       COVER FIT
     */
 
-    const imgRatio =
+    const imageRatio =
       img.naturalWidth /
       img.naturalHeight;
 
@@ -767,65 +839,75 @@ body{
       cw / ch;
 
 
-    let drawW;
-    let drawH;
-    let dx;
-    let dy;
+    let drawWidth;
+    let drawHeight;
+    let drawX;
+    let drawY;
 
 
     if(
       canvasRatio >
-      imgRatio
+      imageRatio
     ){
 
-      drawW =
+      drawWidth =
         cw;
 
-      drawH =
-        cw /
-        imgRatio;
 
-      dx =
+      drawHeight =
+        cw /
+        imageRatio;
+
+
+      drawX =
         0;
 
-      dy =
-        (ch - drawH) /
-        2;
+
+      drawY =
+        (
+          ch -
+          drawHeight
+        ) / 2;
 
     }
 
     else{
 
-      drawH =
+      drawHeight =
         ch;
 
-      drawW =
-        ch *
-        imgRatio;
 
-      dy =
+      drawWidth =
+        ch *
+        imageRatio;
+
+
+      drawY =
         0;
 
-      dx =
-        (cw - drawW) /
-        2;
+
+      drawX =
+        (
+          cw -
+          drawWidth
+        ) / 2;
 
     }
 
 
     ctx.drawImage(
       img,
-      dx,
-      dy,
-      drawW,
-      drawH
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
     );
 
   }
 
 
   /* =========================================================
-     PROGRESS
+     SCROLL / FRAME PROGRESS
      ========================================================= */
 
   let frameProgress =
@@ -840,16 +922,24 @@ body{
     0;
 
 
+  /*
+    Wheel hassasiyeti
+  */
+
   const WHEEL_SENSITIVITY =
     0.0016;
 
+
+  /* =========================================================
+     TEXT BEATS
+     ========================================================= */
 
   function updateBeats(
     progress
   ){
 
     beats.forEach(
-      (beat)=>{
+      (beat) => {
 
         const [
           start,
@@ -878,6 +968,10 @@ body{
   }
 
 
+  /* =========================================================
+     APPLY PROGRESS
+     ========================================================= */
+
   function applyProgress(
     progress
   ){
@@ -895,7 +989,7 @@ body{
     targetFrame =
       frameProgress *
       (
-        images.length - 1
+        CONFIG.frameCount - 1
       );
 
 
@@ -914,19 +1008,25 @@ body{
 
 
   /* =========================================================
-     WHEEL
+     CANVAS WHEEL
      ========================================================= */
 
   function onCanvasWheel(
-    e
+    event
   ){
 
-    e.preventDefault();
+    /*
+      Canvas üzerindeyken
+      sayfa scroll yerine
+      frame değiştir.
+    */
+
+    event.preventDefault();
 
 
     applyProgress(
       frameProgress +
-      e.deltaY *
+      event.deltaY *
       WHEEL_SENSITIVITY
     );
 
@@ -934,7 +1034,7 @@ body{
 
 
   /* =========================================================
-     ANIMATION
+     ANIMATION LOOP
      ========================================================= */
 
   function animate(){
@@ -983,6 +1083,10 @@ body{
 
   async function init(){
 
+    /*
+      Resize
+    */
+
     window.addEventListener(
       "resize",
       resizeCanvas,
@@ -991,6 +1095,10 @@ body{
       }
     );
 
+
+    /*
+      Wheel
+    */
 
     canvas.addEventListener(
       "wheel",
@@ -1001,11 +1109,23 @@ body{
     );
 
 
+    /*
+      Canvas boyutlandır
+    */
+
     resizeCanvas();
 
 
+    /*
+      Frame'leri yükle
+    */
+
     await preloadFrames();
 
+
+    /*
+      İlk frame
+    */
 
     drawFrame(
       0,
@@ -1013,13 +1133,25 @@ body{
     );
 
 
+    /*
+      Başlangıç
+    */
+
     applyProgress(
       0
     );
 
 
+    /*
+      Animasyon başlat
+    */
+
     animate();
 
+
+    /*
+      Loading ekranını kapat
+    */
 
     preloadOverlay.classList.add(
       "hidden"
@@ -1027,8 +1159,16 @@ body{
 
 
     setTimeout(
-      ()=>{
-        preloadOverlay.remove();
+      () => {
+
+        if(
+          preloadOverlay
+        ){
+
+          preloadOverlay.remove();
+
+        }
+
       },
       600
     );
