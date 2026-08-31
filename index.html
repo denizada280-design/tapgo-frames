@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
 
 <title>TapVia NFC</title>
 
@@ -10,8 +14,14 @@
 
 :root{
   --bg:#ffffff;
+  --fg:#222222;
   --accent:#e6005c;
 }
+
+
+/* =========================
+   RESET
+   ========================= */
 
 *{
   box-sizing:border-box;
@@ -19,8 +29,10 @@
   padding:0;
 }
 
+
 html,
 body{
+
   width:100%;
   height:100%;
 
@@ -29,28 +41,29 @@ body{
 
   background:#ffffff;
 
-  overflow:hidden;
-}
+  color:var(--fg);
 
-body{
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Inter",
     Arial,
     sans-serif;
+
+  overflow-x:hidden;
 }
 
 
-/* =====================================================
-   MAIN
-   ===================================================== */
+/* =========================
+   STORY
+   ========================= */
 
-.tapvia-frame-view{
+.scroll-section{
 
   position:relative;
 
   width:100%;
+
   height:100vh;
 
   min-height:650px;
@@ -61,11 +74,24 @@ body{
 }
 
 
-/* =====================================================
-   CANVAS
-   ===================================================== */
+.sticky-wrap{
 
-#tapviaCanvas{
+  position:relative;
+
+  width:100%;
+  height:100%;
+
+  background:#ffffff;
+
+  overflow:hidden;
+}
+
+
+/* =========================
+   CANVAS
+   ========================= */
+
+#sequence-canvas{
 
   position:absolute;
 
@@ -79,107 +105,133 @@ body{
 
   width:auto;
 
-  max-width:96vw;
+  max-width:94vw;
 
   aspect-ratio:478 / 850;
 
   display:block;
 
   background:#ffffff;
+
 }
 
 
-/* =====================================================
+/* =========================
    PROGRESS
-   ===================================================== */
+   ========================= */
 
-.tapvia-progress{
+.scroll-progress-track{
 
   position:absolute;
 
+  bottom:32px;
+
   left:50%;
-  bottom:43px;
 
   transform:
     translateX(-50%);
 
-  width:min(45%,300px);
+  width:
+    min(
+      60%,
+      320px
+    );
 
   height:2px;
 
   background:
-    rgba(30,30,30,.14);
+    rgba(
+      0,
+      0,
+      0,
+      .14
+    );
+
+  border-radius:2px;
 
   overflow:hidden;
 
   z-index:10;
 }
 
-.tapvia-progress-fill{
+
+.scroll-progress-fill{
 
   width:0%;
 
   height:100%;
 
   background:#e6005c;
+
 }
 
 
-/* =====================================================
+/* =========================
    KAYDIR
-   ===================================================== */
+   ========================= */
 
-.tapvia-scroll{
+.scroll-hint{
 
   position:absolute;
 
+  bottom:48px;
+
   left:50%;
-  bottom:58px;
 
   transform:
     translateX(-50%);
 
-  color:#555;
+  font-size:11px;
 
-  font-size:10px;
-
-  letter-spacing:.18em;
+  letter-spacing:.15em;
 
   text-transform:uppercase;
+
+  color:#555;
+
+  opacity:.7;
 
   z-index:10;
 
   animation:
-    tapviaBob 1.8s ease-in-out infinite;
+    bob 1.8s ease-in-out infinite;
 }
 
 
-@keyframes tapviaBob{
+@keyframes bob{
 
-  0%,100%{
+  0%,
+  100%{
+
     transform:
       translate(-50%,0);
+
   }
 
   50%{
+
     transform:
       translate(-50%,6px);
+
   }
 
 }
 
 
-/* =====================================================
+/* =========================
    PRELOADER
-   ===================================================== */
+   ========================= */
 
-#tapviaPreload{
+#preload-overlay{
 
   position:fixed;
 
   inset:0;
 
   z-index:9999;
+
+  width:100%;
+  height:100%;
 
   background:#ffffff;
 
@@ -189,34 +241,94 @@ body{
 
   justify-content:center;
 
+  opacity:1;
+
+  visibility:visible;
+
   transition:
-    opacity .45s ease;
+    opacity .5s ease,
+    visibility .5s ease;
 }
 
-#tapviaPreload.hide{
+
+#preload-overlay.hidden{
 
   opacity:0;
+
+  visibility:hidden;
 
   pointer-events:none;
 }
 
-.tapvia-preload-track{
 
-  width:180px;
+.preload-bar-track{
+
+  width:200px;
 
   height:2px;
 
   background:
-    rgba(0,0,0,.12);
+    rgba(
+      0,
+      0,
+      0,
+      .12
+    );
+
+  border-radius:2px;
+
+  overflow:hidden;
 }
 
-#tapviaPreloadFill{
+
+.preload-bar-fill{
 
   width:0%;
 
   height:100%;
 
   background:#e6005c;
+
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media(max-width:700px){
+
+  .scroll-section{
+
+    min-height:600px;
+
+  }
+
+
+  #sequence-canvas{
+
+    height:88vh;
+
+    max-width:96vw;
+
+  }
+
+
+  .scroll-progress-track{
+
+    width:65%;
+
+    bottom:30px;
+
+  }
+
+
+  .scroll-hint{
+
+    bottom:46px;
+
+  }
+
 }
 
 </style>
@@ -230,11 +342,14 @@ body{
      PRELOADER
      ===================================================== -->
 
-<div id="tapviaPreload">
+<div id="preload-overlay">
 
-  <div class="tapvia-preload-track">
+  <div class="preload-bar-track">
 
-    <div id="tapviaPreloadFill"></div>
+    <div
+      class="preload-bar-fill"
+      id="preload-bar-fill">
+    </div>
 
   </div>
 
@@ -242,308 +357,154 @@ body{
 
 
 <!-- =====================================================
-     FRAME VIEW
+     MAIN STORY
      ===================================================== -->
 
-<div class="tapvia-frame-view">
+<section
+  id="story"
+  class="scroll-section">
+
+  <div class="sticky-wrap">
 
 
-  <canvas
-    id="tapviaCanvas">
-  </canvas>
+    <!-- FRAME CANVAS -->
+
+    <canvas
+      id="sequence-canvas">
+    </canvas>
 
 
-  <div
-    class="tapvia-scroll">
-    KAYDIR
-  </div>
-
-
-  <div class="tapvia-progress">
+    <!-- PROGRESS -->
 
     <div
-      class="tapvia-progress-fill"
-      id="tapviaProgressFill">
+      class="scroll-progress-track">
+
+      <div
+        class="scroll-progress-fill"
+        id="progress-fill">
+      </div>
+
     </div>
+
+
+    <!-- KAYDIR -->
+
+    <div class="scroll-hint">
+      KAYDIR
+    </div>
+
 
   </div>
 
-
-</div>
+</section>
 
 
 <script>
 
-(function(){
+(() => {
 
-"use strict";
+  "use strict";
 
 
-/* =====================================================
-   CONFIG
-   ===================================================== */
+  /* =====================================================
+     CONFIG
+     ===================================================== */
 
-const CONFIG = {
+  const CONFIG = {
 
-  framePrefix:
-    "ezgif-frame-",
+    /*
+      GitHub'daki index.html ile frame'ler
+      AYNI klasörde.
 
-  frameExt:
-    "jpg",
+      Dosyalar:
 
-  frameCount:
-    110,
+      ezgif-frame-001.jpg
+      ezgif-frame-002.jpg
+      ezgif-frame-003.jpg
+      ...
+      ezgif-frame-110.jpg
+    */
 
-  padLength:
-    3,
+    frameFolder: ".",
 
-  ease:
-    0.08
 
-};
+    framePrefix:
+      "ezgif-frame-",
 
 
-/* =====================================================
-   ELEMENTS
-   ===================================================== */
+    frameExt:
+      "jpg",
 
-const canvas =
-  document.getElementById(
-    "tapviaCanvas"
-  );
 
-const ctx =
-  canvas.getContext(
-    "2d"
-  );
+    frameCount:
+      110,
 
-const preload =
-  document.getElementById(
-    "tapviaPreload"
-  );
 
-const preloadFill =
-  document.getElementById(
-    "tapviaPreloadFill"
-  );
+    padLength:
+      3,
 
-const progressFill =
-  document.getElementById(
-    "tapviaProgressFill"
-  );
 
+    /*
+      Beyaz arka plan
+    */
 
-/* =====================================================
-   FRAME URL
-   ===================================================== */
+    background:
+      "#ffffff",
 
-function frameUrl(index){
 
-  const number =
-    String(index + 1)
-      .padStart(
-        CONFIG.padLength,
-        "0"
-      );
+    /*
+      Animasyon yumuşaklığı
 
-  return (
-    "./" +
-    CONFIG.framePrefix +
-    number +
-    "." +
-    CONFIG.frameExt
-  );
+      Daha küçük:
+      daha yumuşak
 
-}
+      Daha büyük:
+      daha hızlı
+    */
 
+    ease:
+      0.08
 
-/* =====================================================
-   IMAGES
-   ===================================================== */
+  };
 
-const images =
-  new Array(
-    CONFIG.frameCount
-  );
 
-let loaded =
-  0;
+  /* =====================================================
+     DOM
+     ===================================================== */
 
-
-/* =====================================================
-   PRELOAD
-   ===================================================== */
-
-function preloadFrames(){
-
-  return new Promise(
-    resolve => {
-
-      for(
-        let i=0;
-        i<CONFIG.frameCount;
-        i++
-      ){
-
-        const img =
-          new Image();
-
-        img.src =
-          frameUrl(i);
-
-        img.onload =
-          function(){
-
-            loaded++;
-
-            const percent =
-              Math.round(
-                (
-                  loaded /
-                  CONFIG.frameCount
-                ) * 100
-              );
-
-            preloadFill.style.width =
-              percent + "%";
-
-            if(
-              loaded ===
-              CONFIG.frameCount
-            ){
-
-              resolve();
-
-            }
-
-          };
-
-        img.onerror =
-          function(){
-
-            console.warn(
-              "Frame bulunamadı:",
-              img.src
-            );
-
-            loaded++;
-
-            const percent =
-              Math.round(
-                (
-                  loaded /
-                  CONFIG.frameCount
-                ) * 100
-              );
-
-            preloadFill.style.width =
-              percent + "%";
-
-            if(
-              loaded ===
-              CONFIG.frameCount
-            ){
-
-              resolve();
-
-            }
-
-          };
-
-        images[i] =
-          img;
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   CANVAS SIZE
-   ===================================================== */
-
-let dpr =
-  Math.min(
-    window.devicePixelRatio || 1,
-    2
-  );
-
-let currentFrame =
-  0;
-
-let targetFrame =
-  0;
-
-let progress =
-  0;
-
-
-function resizeCanvas(){
-
-  dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
+  const canvas =
+    document.getElementById(
+      "sequence-canvas"
     );
 
-  const rect =
-    canvas.getBoundingClientRect();
 
-  canvas.width =
-    Math.round(
-      rect.width * dpr
+  const ctx =
+    canvas.getContext(
+      "2d"
     );
 
-  canvas.height =
-    Math.round(
-      rect.height * dpr
+
+  const progressFill =
+    document.getElementById(
+      "progress-fill"
     );
 
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
 
-  drawFrame(
-    Math.round(
-      currentFrame
-    )
-  );
-
-}
-
-
-/* =====================================================
-   DRAW
-   ===================================================== */
-
-function drawFrame(
-  frameIndex
-){
-
-  const index =
-    Math.min(
-      Math.max(
-        frameIndex,
-        0
-      ),
-      images.length - 1
+  const preloadOverlay =
+    document.getElementById(
+      "preload-overlay"
     );
 
-  const img =
-    images[index];
+
+  const preloadBarFill =
+    document.getElementById(
+      "preload-bar-fill"
+    );
+
 
   if(
-    !img ||
-    !img.complete ||
-    img.naturalWidth === 0
+    !canvas ||
+    !ctx
   ){
 
     return;
@@ -551,263 +512,715 @@ function drawFrame(
   }
 
 
-  const rect =
-    canvas.getBoundingClientRect();
+  /*
+    Canvas arka planı
+  */
 
-  const width =
-    rect.width;
-
-  const height =
-    rect.height;
+  canvas.style.background =
+    CONFIG.background;
 
 
   /*
-    BEYAZ ZEMİN
+    CSS değişkeni
   */
 
-  ctx.fillStyle =
-    "#ffffff";
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  ctx.imageSmoothingEnabled =
-    true;
-
-  ctx.imageSmoothingQuality =
-    "high";
-
-
-  /*
-    COVER
-  */
-
-  const imageRatio =
-    img.naturalWidth /
-    img.naturalHeight;
-
-  const canvasRatio =
-    width / height;
-
-  let drawWidth;
-  let drawHeight;
-  let x;
-  let y;
-
-
-  if(
-    canvasRatio >
-    imageRatio
-  ){
-
-    drawWidth =
-      width;
-
-    drawHeight =
-      width /
-      imageRatio;
-
-    x =
-      0;
-
-    y =
-      (
-        height -
-        drawHeight
-      ) / 2;
-
-  }
-
-  else{
-
-    drawHeight =
-      height;
-
-    drawWidth =
-      height *
-      imageRatio;
-
-    x =
-      (
-        width -
-        drawWidth
-      ) / 2;
-
-    y =
-      0;
-
-  }
-
-
-  ctx.drawImage(
-    img,
-    x,
-    y,
-    drawWidth,
-    drawHeight
-  );
-
-}
-
-
-/* =====================================================
-   PROGRESS
-   ===================================================== */
-
-const WHEEL_SENSITIVITY =
-  0.0016;
-
-
-function applyProgress(
-  value
-){
-
-  progress =
-    Math.min(
-      Math.max(
-        value,
-        0
-      ),
-      1
+  document.documentElement.style
+    .setProperty(
+      "--bg",
+      CONFIG.background
     );
 
-  targetFrame =
-    progress *
-    (
-      CONFIG.frameCount - 1
-    );
 
-  progressFill.style.width =
-    (
-      progress * 100
-    ) + "%";
+  /* =====================================================
+     FRAME URL
+     ===================================================== */
 
-}
-
-
-/* =====================================================
-   WHEEL
-   ===================================================== */
-
-function handleWheel(
-  event
-){
-
-  event.preventDefault();
-
-  applyProgress(
-    progress +
-    event.deltaY *
-    WHEEL_SENSITIVITY
-  );
-
-}
-
-
-/* =====================================================
-   ANIMATION
-   ===================================================== */
-
-function animate(){
-
-  const difference =
-    targetFrame -
-    currentFrame;
-
-  if(
-    Math.abs(difference) >
-    0.01
+  function frameUrl(
+    index
   ){
 
-    currentFrame +=
-      difference *
-      CONFIG.ease;
+    /*
+      index 0:
+      ezgif-frame-001.jpg
+
+      index 1:
+      ezgif-frame-002.jpg
+
+      ...
+
+      index 109:
+      ezgif-frame-110.jpg
+    */
+
+    const number =
+      String(
+        index + 1
+      ).padStart(
+        CONFIG.padLength,
+        "0"
+      );
+
+
+    return (
+      CONFIG.frameFolder +
+      "/" +
+      CONFIG.framePrefix +
+      number +
+      "." +
+      CONFIG.frameExt
+    );
 
   }
-  else{
-
-    currentFrame =
-      targetFrame;
-
-  }
-
-  drawFrame(
-    Math.round(
-      currentFrame
-    )
-  );
-
-  requestAnimationFrame(
-    animate
-  );
-
-}
 
 
-/* =====================================================
-   INIT
-   ===================================================== */
+  /* =====================================================
+     IMAGE ARRAY
+     ===================================================== */
 
-async function init(){
-
-  window.addEventListener(
-    "resize",
-    resizeCanvas,
-    {
-      passive:true
-    }
-  );
-
-  canvas.addEventListener(
-    "wheel",
-    handleWheel,
-    {
-      passive:false
-    }
-  );
-
-  resizeCanvas();
-
-  await preloadFrames();
-
-  drawFrame(
-    0
-  );
-
-  applyProgress(
-    0
-  );
-
-  animate();
+  const images =
+    new Array(
+      CONFIG.frameCount
+    );
 
 
-  preload.classList.add(
-    "hide"
-  );
+  let loadedCount =
+    0;
 
 
-  setTimeout(
-    function(){
+  /* =====================================================
+     PRELOAD FRAMES
+     ===================================================== */
 
-      if(preload){
+  function preloadFrames(){
 
-        preload.remove();
+    return new Promise(
+      (resolve)=>{
+
+        /*
+          Hiç frame yoksa
+        */
+
+        if(
+          CONFIG.frameCount <= 0
+        ){
+
+          resolve();
+
+          return;
+
+        }
+
+
+        /*
+          Tüm frame'leri yükle
+        */
+
+        for(
+          let i = 0;
+          i < CONFIG.frameCount;
+          i++
+        ){
+
+          const img =
+            new Image();
+
+
+          img.src =
+            frameUrl(i);
+
+
+          /*
+            Başarılı yükleme
+          */
+
+          img.onload =
+            () => {
+
+              loadedCount++;
+
+
+              const percent =
+                Math.round(
+                  (
+                    loadedCount /
+                    CONFIG.frameCount
+                  ) * 100
+                );
+
+
+              if(
+                preloadBarFill
+              ){
+
+                preloadBarFill.style.width =
+                  percent + "%";
+
+              }
+
+
+              if(
+                loadedCount ===
+                CONFIG.frameCount
+              ){
+
+                resolve();
+
+              }
+
+            };
+
+
+          /*
+            Eksik frame varsa
+            preload sonsuza kadar
+            beklemesin.
+          */
+
+          img.onerror =
+            () => {
+
+              console.warn(
+                "Frame yüklenemedi:",
+                img.src
+              );
+
+
+              loadedCount++;
+
+
+              const percent =
+                Math.round(
+                  (
+                    loadedCount /
+                    CONFIG.frameCount
+                  ) * 100
+                );
+
+
+              if(
+                preloadBarFill
+              ){
+
+                preloadBarFill.style.width =
+                  percent + "%";
+
+              }
+
+
+              if(
+                loadedCount ===
+                CONFIG.frameCount
+              ){
+
+                resolve();
+
+              }
+
+            };
+
+
+          images[i] =
+            img;
+
+        }
 
       }
+    );
 
-    },
-    500
-  );
-
-}
+  }
 
 
-init();
+  /* =====================================================
+     CANVAS STATE
+     ===================================================== */
+
+  let dpr =
+    Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
+
+
+  let currentFrame =
+    0;
+
+
+  let targetFrame =
+    0;
+
+
+  let frameProgress =
+    0;
+
+
+  /* =====================================================
+     RESIZE
+     ===================================================== */
+
+  function resizeCanvas(){
+
+    dpr =
+      Math.min(
+        window.devicePixelRatio || 1,
+        2
+      );
+
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    canvas.width =
+      Math.round(
+        rect.width *
+        dpr
+      );
+
+
+    canvas.height =
+      Math.round(
+        rect.height *
+        dpr
+      );
+
+
+    ctx.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+
+
+    drawFrame(
+      Math.round(
+        currentFrame
+      )
+    );
+
+  }
+
+
+  /* =====================================================
+     DRAW FRAME
+     ===================================================== */
+
+  function drawFrame(
+    frameIndex
+  ){
+
+    /*
+      Frame sınırları
+    */
+
+    const maxIndex =
+      images.length - 1;
+
+
+    const index =
+      Math.min(
+        Math.max(
+          frameIndex,
+          0
+        ),
+        maxIndex
+      );
+
+
+    const img =
+      images[index];
+
+
+    /*
+      Görsel hazır değilse
+    */
+
+    if(
+      !img ||
+      !img.complete ||
+      img.naturalWidth === 0
+    ){
+
+      return;
+
+    }
+
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    const canvasWidth =
+      rect.width;
+
+
+    const canvasHeight =
+      rect.height;
+
+
+    /*
+      ===============================
+      BEYAZ ZEMİN
+      ===============================
+    */
+
+    ctx.fillStyle =
+      CONFIG.background;
+
+
+    ctx.fillRect(
+      0,
+      0,
+      canvasWidth,
+      canvasHeight
+    );
+
+
+    /*
+      Görüntü kalitesi
+    */
+
+    ctx.imageSmoothingEnabled =
+      true;
+
+
+    ctx.imageSmoothingQuality =
+      "high";
+
+
+    /*
+      ===============================
+      COVER FIT
+      ===============================
+    */
+
+    const imageRatio =
+      img.naturalWidth /
+      img.naturalHeight;
+
+
+    const canvasRatio =
+      canvasWidth /
+      canvasHeight;
+
+
+    let drawWidth;
+    let drawHeight;
+    let drawX;
+    let drawY;
+
+
+    if(
+      canvasRatio >
+      imageRatio
+    ){
+
+      /*
+        Canvas daha geniş
+      */
+
+      drawWidth =
+        canvasWidth;
+
+
+      drawHeight =
+        canvasWidth /
+        imageRatio;
+
+
+      drawX =
+        0;
+
+
+      drawY =
+        (
+          canvasHeight -
+          drawHeight
+        ) / 2;
+
+    }
+
+    else{
+
+      /*
+        Canvas daha uzun
+      */
+
+      drawHeight =
+        canvasHeight;
+
+
+      drawWidth =
+        canvasHeight *
+        imageRatio;
+
+
+      drawX =
+        (
+          canvasWidth -
+          drawWidth
+        ) / 2;
+
+
+      drawY =
+        0;
+
+    }
+
+
+    /*
+      FRAME ÇİZ
+    */
+
+    ctx.drawImage(
+      img,
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
+    );
+
+  }
+
+
+  /* =====================================================
+     PROGRESS
+     ===================================================== */
+
+  const WHEEL_SENSITIVITY =
+    0.0016;
+
+
+  function applyProgress(
+    value
+  ){
+
+    /*
+      0–1 arasında tut
+    */
+
+    frameProgress =
+      Math.min(
+        Math.max(
+          value,
+          0
+        ),
+        1
+      );
+
+
+    /*
+      0 → 109 frame
+    */
+
+    targetFrame =
+      frameProgress *
+      (
+        CONFIG.frameCount - 1
+      );
+
+
+    /*
+      Progress çizgisi
+    */
+
+    if(
+      progressFill
+    ){
+
+      progressFill.style.width =
+        (
+          frameProgress *
+          100
+        ) + "%";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     WHEEL
+     ===================================================== */
+
+  function onCanvasWheel(
+    event
+  ){
+
+    /*
+      Animasyon alanında
+      sayfa scroll olmaz.
+
+      Frame değişir.
+    */
+
+    event.preventDefault();
+
+
+    applyProgress(
+      frameProgress +
+      event.deltaY *
+      WHEEL_SENSITIVITY
+    );
+
+  }
+
+
+  /* =====================================================
+     ANIMATION LOOP
+     ===================================================== */
+
+  function animate(){
+
+    const difference =
+      targetFrame -
+      currentFrame;
+
+
+    if(
+      Math.abs(difference) >
+      0.01
+    ){
+
+      currentFrame +=
+        difference *
+        CONFIG.ease;
+
+    }
+
+    else{
+
+      currentFrame =
+        targetFrame;
+
+    }
+
+
+    drawFrame(
+      Math.round(
+        currentFrame
+      )
+    );
+
+
+    requestAnimationFrame(
+      animate
+    );
+
+  }
+
+
+  /* =====================================================
+     INIT
+     ===================================================== */
+
+  async function init(){
+
+    /*
+      Resize
+    */
+
+    window.addEventListener(
+      "resize",
+      resizeCanvas,
+      {
+        passive:true
+      }
+    );
+
+
+    /*
+      Wheel
+    */
+
+    canvas.addEventListener(
+      "wheel",
+      onCanvasWheel,
+      {
+        passive:false
+      }
+    );
+
+
+    /*
+      Canvas ölçüsü
+    */
+
+    resizeCanvas();
+
+
+    /*
+      Frame'leri yükle
+    */
+
+    await preloadFrames();
+
+
+    /*
+      İlk frame
+    */
+
+    drawFrame(
+      0
+    );
+
+
+    /*
+      Başlangıç
+    */
+
+    applyProgress(
+      0
+    );
+
+
+    /*
+      Animasyon başlat
+    */
+
+    animate();
+
+
+    /*
+      PRELOADER KAPAT
+    */
+
+    if(
+      preloadOverlay
+    ){
+
+      preloadOverlay.classList.add(
+        "hidden"
+      );
+
+
+      setTimeout(
+        () => {
+
+          if(
+            preloadOverlay
+          ){
+
+            preloadOverlay.remove();
+
+          }
+
+        },
+        600
+      );
+
+    }
+
+  }
+
+
+  /*
+    BAŞLAT
+  */
+
+  init();
 
 })();
 
